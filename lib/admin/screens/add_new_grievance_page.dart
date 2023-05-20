@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/gender_group.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
+import 'package:lj_grievance/vaildation/validation.dart';
 import 'package:provider/provider.dart';
 
 import '../../custom_widgets/custom_input_field.dart';
@@ -17,13 +18,13 @@ class AddGrievancePage with ChangeNotifier{
   TextEditingController contact = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  final _addGrievanceController = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   Widget addGrievancePage(){
     return SingleChildScrollView(
       child: ChangeNotifierProvider<NavigateToPage>(
         create: (context) => NavigateToPage(),
         child: Form(
-          key: _addGrievanceController,
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
@@ -32,7 +33,12 @@ class AddGrievancePage with ChangeNotifier{
                 const SizedBox(height: 30,),
                 const Text("Add new grievance cell member",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
                 const SizedBox(height: 30,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Enter name"),
+                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Enter name",validate: (value){
+                  if(!value!.isValidName){
+                    return "Enter valid name";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 15,),
 
                 Consumer<NavigateToPage>(
@@ -58,20 +64,44 @@ class AddGrievancePage with ChangeNotifier{
                 ),
 
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: designation,icon: Icons.description_outlined,text: "Designation"),
+                CustomInputField().customInputField(controller: designation,icon: Icons.description_outlined,text: "Designation",validate: (value){
+                  if(value!.isNotNull){
+                    return "Enter designation";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: email,icon: Icons.email_outlined,text: "Email",inputType: TextInputType.emailAddress),
+                CustomInputField().customInputField(controller: email,icon: Icons.email_outlined,text: "Email",inputType: TextInputType.emailAddress,validate: (value){
+                  if(!value!.isValidEmail){
+                    return "Enter valid email";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: contact,icon: Icons.contact_page_outlined,text: "Contact no",inputType: TextInputType.number),
+                CustomInputField().customInputField(controller: contact,icon: Icons.contact_page_outlined,text: "Contact no",inputType: TextInputType.number,validate: (value){
+                  if(value!.isNotNull){
+                    return "Enter contact no";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: password,icon: Icons.lock_outline,text: "Password"),
+                CustomInputField().customInputField(controller: password,icon: Icons.lock_outline,text: "Password",obscureText: true,validate: (value){
+                  if(!value!.isValidPassword){
+                    return "Enter valid password";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 15,),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Add member"),
-                    RoundedButton().roundedButton(icon: Icons.add),
+                    RoundedButton().roundedButton(icon: Icons.add,onClick: (){
+                      if(_formKey.currentState!.validate()){
+
+                      }
+                    }),
                   ],
                 ),
                 const SizedBox(height: 20,),
