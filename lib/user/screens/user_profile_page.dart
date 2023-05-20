@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
+import 'package:lj_grievance/vaildation/validation.dart';
 
 class UserProfilePage extends StatelessWidget{
   UserProfilePage({super.key});
+
+  final _formKey = GlobalKey<FormState>();
+  final _changePasswordKey = GlobalKey<FormState>();
 
   TextEditingController name =  TextEditingController();
   TextEditingController email = TextEditingController();
@@ -16,6 +20,7 @@ class UserProfilePage extends StatelessWidget{
       child: Scaffold(
           body: SingleChildScrollView(
             child: Form(
+              key: _formKey,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -30,16 +35,30 @@ class UserProfilePage extends StatelessWidget{
                           }),
                         ],
                       ),
+                      const Divider(),
                       const SizedBox(height: 50,),
                       RichText(text: const TextSpan(text: "Your",style: TextStyle(color: Colors.blueAccent,fontSize: 20),children: [
                         TextSpan(text: "\tProfile",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10))
                       ])),
-                      const SizedBox(height: 30,),
-                      CustomInputField().customInputField(icon: Icons.abc_outlined, text: "", controller: name),
-                      const SizedBox(height: 10,),
-                      CustomInputField().customInputField(icon: Icons.email_outlined, text: "", controller: email),
+                      const SizedBox(height: 40,),
+                      CustomInputField().customInputField(icon: Icons.abc_outlined, text: "", controller: name,validate: (value){
+                        if(!value!.isValidName){
+                          return "Enter valid name";
+                        }
+                      }),
                       const SizedBox(height: 20,),
-                      ElevatedButton(onPressed: (){},style: ButtonStyle(elevation: MaterialStateProperty.all(0)), child: const Text("Change Profile"),),
+                      CustomInputField().customInputField(icon: Icons.email_outlined, text: "", controller: email,validate: (value){
+                        if(!value!.isValidEmail){
+                          return "Enter valid name";
+                        }
+                      }),
+                      const SizedBox(height: 30,),
+                      ElevatedButton(onPressed: (){
+                        if(_formKey.currentState!.validate()){
+
+                        }
+                      },style: ButtonStyle(elevation: MaterialStateProperty.all(0)), child: const Text("Change Profile"),),
+                      const SizedBox(height: 10,),
                       const Divider(),
                       const SizedBox(height: 20,),
                       CustomMenuItem().customMenuItem(icon:Icons.change_circle_outlined,text: "Change Password", onclick: (){
@@ -47,15 +66,26 @@ class UserProfilePage extends StatelessWidget{
                           return AlertDialog(
 
                             title: Form(
+                              key: _changePasswordKey,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 20),
                                 child: Column(
                                   children:[
                                     const Text("Change Password"),
                                     const SizedBox(height: 20,),
-                                    CustomInputField().customInputField(icon: Icons.change_circle_outlined, text: "New password", controller: newPassword),
+                                    CustomInputField().customInputField(icon: Icons.change_circle_outlined, text: "New password", controller: newPassword,validate: (value){
+                                      if(!value!.isValidPassword){
+                                        return "Enter valid password";
+                                      }
+                                      return null;
+                                    }),
                                     const SizedBox(height: 20,),
-                                    CustomInputField().customInputField(icon: Icons.change_circle_outlined, text: "Confirm new password", controller: newPassword),
+                                    CustomInputField().customInputField(icon: Icons.change_circle_outlined, text: "Confirm new password", controller: newPassword,validate: (value){
+                                      if(!value!.isValidPassword){
+                                        return "Enter valid password";
+                                      }
+                                      return null;
+                                    }),
                                   ],
                                 ),
                               ),
@@ -64,7 +94,9 @@ class UserProfilePage extends StatelessWidget{
                               TextButton(onPressed: (){
                                 Navigator.pop(context);
                               }, child: const Text("Cancel")),
-                              TextButton(onPressed: (){}, child: const Text("Update")),
+                              TextButton(onPressed: (){
+                                if(_changePasswordKey.currentState!.validate()){}
+                              }, child: const Text("Update")),
                             ],
                           );
                         });

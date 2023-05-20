@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 class PostNewGrievance with ChangeNotifier{
   bool isSelected = false;
 
+  final _postNewGrievanceFormKey = GlobalKey<FormState>();
+
   List<String> grievanceType = ['College issue','other'];
   String? selectedGrievanceType;
 
@@ -19,6 +21,7 @@ class PostNewGrievance with ChangeNotifier{
       child: ChangeNotifierProvider<NavigateToPage>(
         create: (context) => NavigateToPage(),
         child: Form(
+          key: _postNewGrievanceFormKey,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -39,16 +42,28 @@ class PostNewGrievance with ChangeNotifier{
                   ],
                 ),
                 const SizedBox(height: 20,),
-                CustomInputField().customInputField(icon: Icons.subject_outlined, text: 'Enter subject', controller: subject),
+                CustomInputField().customInputField(icon: Icons.subject_outlined, text: 'Enter subject', controller: subject,validate: (value){
+                  if((value!.trim()).isEmpty){
+                    return "Enter subject";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 10,),
-                CustomInputField().customInputField(icon: Icons.details, text: 'Enter details', controller: details,maxLines: 5),
+                CustomInputField().customInputField(icon: Icons.details, text: 'Enter details', controller: details,maxLines: 5,validate: (value){
+                  if((value!.trim()).isEmpty){
+                    return "Enter details";
+                  }
+                  return null;
+                }),
                 const SizedBox(height: 20,),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Submit"),
-                    RoundedButton().roundedButton(icon: Icons.chevron_right_sharp)
+                    RoundedButton().roundedButton(icon: Icons.chevron_right_sharp,onClick: (){
+                      if(_postNewGrievanceFormKey.currentState!.validate()){}
+                    })
                   ],
                 ),
               ],

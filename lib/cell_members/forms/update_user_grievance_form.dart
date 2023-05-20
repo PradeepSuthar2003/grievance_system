@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 class UpdateUserGrievanceForm{
 
+  final _replyFormKey = GlobalKey<FormState>();
+
   List<String> grievanceTypeList = ['Issue about college','BCA'];
   String? selectedGrievanceType;
 
@@ -78,19 +80,29 @@ class UpdateUserGrievanceForm{
                       context!=null?showDialog(context: context, builder: (context) {
                         return SingleChildScrollView(
                           child: AlertDialog(
-                            title: Column(
-                              children: [
-                                const Text("Reply"),
-                                const SizedBox(height: 15,),
-                                CustomInputField().customInputField(icon: Icons.abc_outlined, text: "Reply...", controller: reply,maxLines: 5),
-                              ],
+                            title: Form(
+                              key: _replyFormKey,
+                              child: Column(
+                                children: [
+                                  const Text("Reply"),
+                                  const SizedBox(height: 15,),
+                                  CustomInputField().customInputField(icon: Icons.abc_outlined, text: "Reply...", controller: reply,maxLines: 5,validate: (value){
+                                    if((value!.trim()).isEmpty){
+                                      return "Enter reply";
+                                    }
+                                    return null;
+                                  }),
+                                ],
+                              ),
                             ),
                             actions:[
                               TextButton(onPressed: () {
                                 Navigator.pop(context);
                               },
                                   child:const Text("Cancel")),
-                              TextButton(onPressed: () {},
+                              TextButton(onPressed: () {
+                                if(_replyFormKey.currentState!.validate()){}
+                              },
                             child:const Text("Reply"))
                             ],
                           ),

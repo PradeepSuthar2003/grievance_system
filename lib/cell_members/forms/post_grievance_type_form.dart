@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
+import 'package:lj_grievance/vaildation/validation.dart';
 
 class PostGrievanceTypeForm{
+
+  final _postGrievanceFormKey = GlobalKey<FormState>();
+
   TextEditingController grievanceType = TextEditingController();
 
   Widget postGrievanceForm(){
     return Form(
+      key: _postGrievanceFormKey,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -15,9 +20,16 @@ class PostGrievanceTypeForm{
               padding: EdgeInsets.all(20.0),
               child: Text("Add grievance type",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
             ),
-            CustomInputField().customInputField(icon: Icons.select_all_outlined, text: "Enter grievance type", controller: grievanceType),
+            CustomInputField().customInputField(icon: Icons.select_all_outlined, text: "Enter grievance type", controller: grievanceType,validate: (value){
+              if((value!.trim()).isEmpty){
+                return "Enter grievance type";
+              }
+              return null;
+              }),
             const SizedBox(height: 10,),
-            ElevatedButton(onPressed: (){},style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)), child: const Text("Add")),
+            ElevatedButton(onPressed: (){
+              if(_postGrievanceFormKey.currentState!.validate()){}
+            },style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)), child: const Text("Add")),
             const SizedBox(height: 10,),
             const Divider(),
             const Text("All grievance type"),
