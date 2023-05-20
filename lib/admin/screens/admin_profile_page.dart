@@ -28,11 +28,12 @@ class AdminProfilePage extends StatelessWidget{
                 children: [
                   const SizedBox(height: 20,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       RoundedButton().roundedButton(icon: Icons.arrow_back,radius: 20,onClick: (){
                         Navigator.pop(context);
                       }),
+                      const Text("pogpks"),
                     ],
                   ),
                   const Divider(),
