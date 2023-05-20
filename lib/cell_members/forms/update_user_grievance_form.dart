@@ -5,27 +5,24 @@ import 'package:provider/provider.dart';
 
 class UpdateUserGrievanceForm{
 
-  List<String> courseList = ['MCA','BCA'];
-  String? selectedCourse;
+  List<String> grievanceTypeList = ['Issue about college','BCA'];
+  String? selectedGrievanceType;
 
-  List<String> batchList = ['2018','2019'];
-  String? selectedBatch;
+  List<String> statusList = ['Open','Close'];
+  String? selectedStatus;
 
-  List<String> approvalList = ['Approved','Unapproved'];
-  String? selectedApproval;
 
-  TextEditingController enroll = TextEditingController();
-  TextEditingController name = TextEditingController();
-  TextEditingController designation = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController contact = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController replyMessage = TextEditingController();
+  TextEditingController srNo = TextEditingController();
+  TextEditingController grievanceNo = TextEditingController();
+  TextEditingController date = TextEditingController();
+  TextEditingController subject = TextEditingController();
+  TextEditingController details = TextEditingController();
+  TextEditingController grievanceId = TextEditingController();
+  TextEditingController reply = TextEditingController();
 
   Widget updateUserGrievanceForm({BuildContext? context}){
-    selectedCourse = courseList[0];
-    selectedBatch = batchList[0];
-    selectedApproval = approvalList[0];
+    selectedGrievanceType = grievanceTypeList[0];
+    selectedStatus = statusList[1];
 
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
@@ -33,16 +30,16 @@ class UpdateUserGrievanceForm{
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(
-            width: 400,
+            width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 15,),
                 const Text("Update user",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
                 const SizedBox(height: 30,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Sr.no."),
+                CustomInputField().customInputField(controller: srNo,icon: Icons.abc_outlined,text: "Sr.no."),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Gri.no"),
+                CustomInputField().customInputField(controller: grievanceNo,icon: Icons.abc_outlined,text: "Gri.no"),
                 const SizedBox(height: 15,),
                 Consumer<NavigateToPage>(
                   builder: (context, value, child) {
@@ -50,21 +47,21 @@ class UpdateUserGrievanceForm{
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text("Grievance type"),
-                        DropdownButton(items: courseList.map((String item){
+                        DropdownButton(items: grievanceTypeList.map((String item){
                           return DropdownMenuItem(value: item,child: Text(item),);
-                        }).toList(), onChanged: (val){ selectedCourse = val; value.notifyListeners();},value: selectedCourse,),
+                        }).toList(), onChanged: (val){ selectedGrievanceType = val; value.notifyListeners();},value: selectedGrievanceType,),
                       ],
                     );
                   },
                 ),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Date"),
+                CustomInputField().customInputField(controller: date,icon: Icons.abc_outlined,text: "Date"),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Subject"),
+                CustomInputField().customInputField(controller: subject,icon: Icons.abc_outlined,text: "Subject"),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Details",maxLines: 5),
+                CustomInputField().customInputField(controller: details,icon: Icons.abc_outlined,text: "Details",maxLines: 5),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Gri. Id"),
+                CustomInputField().customInputField(controller: grievanceId,icon: Icons.abc_outlined,text: "Gri. Id"),
                 const SizedBox(height: 15,),
                 Consumer<NavigateToPage>(
                   builder: (context, value, child) {
@@ -72,9 +69,9 @@ class UpdateUserGrievanceForm{
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text("Status"),
-                        DropdownButton(items: batchList.map((String item){
+                        DropdownButton(items: statusList.map((String item){
                           return DropdownMenuItem(value: item,child: Text(item),);
-                        }).toList(), onChanged: (val){ selectedBatch = val; value.notifyListeners();},value: selectedBatch,),
+                        }).toList(), onChanged: (val){ selectedStatus = val; value.notifyListeners();},value: selectedStatus,),
                       ],
                     );
                   },
@@ -83,16 +80,24 @@ class UpdateUserGrievanceForm{
                   children:[
                     TextButton(onPressed: (){
                       context!=null?showDialog(context: context, builder: (context) {
-                        return AlertDialog(
-                          title: Column(
-                            children: [
-                              const Text("Reply"),
-                              const SizedBox(height: 15,),
-                              CustomInputField().customInputField(icon: Icons.abc_outlined, text: "Reply...", controller: replyMessage,maxLines: 5),
+                        return SingleChildScrollView(
+                          child: AlertDialog(
+                            title: Column(
+                              children: [
+                                const Text("Reply"),
+                                const SizedBox(height: 15,),
+                                CustomInputField().customInputField(icon: Icons.abc_outlined, text: "Reply...", controller: reply,maxLines: 5),
+                              ],
+                            ),
+                            actions:[
+                              TextButton(onPressed: () {
+                                Navigator.pop(context);
+                              },
+                                  child:const Text("Cancel")),
+                              TextButton(onPressed: () {},
+                            child:const Text("Reply"))
                             ],
                           ),
-                          actions:[TextButton(onPressed: () {},
-                          child:const Text("Reply"))],
                         );
                       },):const Text("");
                     }, child: const Text("Reply now"))
