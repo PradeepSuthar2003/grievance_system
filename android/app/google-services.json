@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "344797594159",
+    "project_id": "pogpksgrievancesystem",
+    "storage_bucket": "pogpksgrievancesystem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344797594159:android:20964ed7c9400c363b7cda",
+        "android_client_info": {
+          "package_name": "com.pogpks.lj_grievance.lj_grievance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344797594159-u23tnat6gjsesqqj0dt31rvn14kkojgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByL2gHVCgVl41P7KBWnlFe0Cq-qkAbifM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344797594159-u23tnat6gjsesqqj0dt31rvn14kkojgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
