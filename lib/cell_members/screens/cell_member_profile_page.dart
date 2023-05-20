@@ -57,7 +57,7 @@ class CellMemberProfilePage extends StatelessWidget{
                         if(_formKey.currentState!.validate()){
 
                         }
-                      },style: ButtonStyle(elevation: MaterialStateProperty.all(0)), child: const Text("Change Profile"),),
+                      },style: ButtonStyle(elevation: MaterialStateProperty.all(0)),child: const Text("Change Profile"),),
                       const SizedBox(height: 10,),
                       const Divider(),
                       const SizedBox(height: 20,),

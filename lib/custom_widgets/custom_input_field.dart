@@ -9,10 +9,12 @@ class CustomInputField{
     bool readOnly = false,
     bool obscureText = false,
     String? Function(String?)? validate,
+    Color themeColor = Colors.black,
     required TextEditingController controller
   })
   {
     return TextFormField(
+      style: TextStyle(color: themeColor),
       readOnly: readOnly,
       obscureText: obscureText,
       controller: controller,
@@ -20,10 +22,16 @@ class CustomInputField{
       maxLines: maxLines,
       keyboardType:inputType,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(icon,color: themeColor,),
         hintText: text,
+        hintStyle: TextStyle(color: themeColor),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: themeColor),
+            borderRadius: BorderRadius.circular(10.0)
+        ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0)
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: themeColor),
         ),
         focusedErrorBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.redAccent),
@@ -32,9 +40,6 @@ class CustomInputField{
         errorBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.redAccent),
             borderRadius: BorderRadius.circular(10.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0)
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/admin/screens/admin_profile_page.dart';
 import 'package:lj_grievance/authentication/screens/login_page.dart';
+import 'package:lj_grievance/authentication/screens/signup_page.dart';
 import 'package:lj_grievance/cell_members/screens/cell_member_home_page.dart';
 import 'package:lj_grievance/cell_members/screens/cell_member_profile_page.dart';
 import 'package:lj_grievance/cell_members/screens/update_user_grievance_page.dart';
@@ -19,7 +20,7 @@ class GrievanceApp extends StatelessWidget{
   Widget build(BuildContext context){
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'login_page',
+      initialRoute: 'admin_home_page',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -33,6 +34,7 @@ class GrievanceApp extends StatelessWidget{
         'user_profile_page':(context) => UserProfilePage(),
         'authenticate':(context) => Authenticate(context: context).checkLogin(),
         'login_page':(context) => const LoginPage(),
+        'signup_page':(context) => const SignUpPage(),
       },
     );
   }
