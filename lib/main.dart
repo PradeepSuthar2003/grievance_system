@@ -17,7 +17,7 @@ class GrievanceApp extends StatelessWidget{
   Widget build(BuildContext context){
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'user_home_page',
+      initialRoute: 'cell_member_home_page',
       routes: {
         'admin_home_page':(context) => const AdminHomePage(),
         'admin_profile':(context) => AdminProfilePage(),

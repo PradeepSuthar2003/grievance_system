@@ -37,31 +37,27 @@ class UpdateUserGrievanceForm{
                 const SizedBox(height: 15,),
                 const Text("Update user",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
                 const SizedBox(height: 30,),
-                CustomInputField().customInputField(controller: srNo,icon: Icons.abc_outlined,text: "Sr.no."),
+                CustomInputField().customInputField(controller: srNo,icon: Icons.abc_outlined,text: "Sr.no.",readOnly: true),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: grievanceNo,icon: Icons.abc_outlined,text: "Gri.no"),
+                CustomInputField().customInputField(controller: grievanceNo,icon: Icons.abc_outlined,text: "Gri.no",readOnly: true),
                 const SizedBox(height: 15,),
-                Consumer<NavigateToPage>(
-                  builder: (context, value, child) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Grievance type"),
-                        DropdownButton(items: grievanceTypeList.map((String item){
-                          return DropdownMenuItem(value: item,child: Text(item),);
-                        }).toList(), onChanged: (val){ selectedGrievanceType = val; value.notifyListeners();},value: selectedGrievanceType,),
-                      ],
-                    );
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Grievance type"),
+                    DropdownButton(items: grievanceTypeList.map((String item){
+                      return DropdownMenuItem(value: item,child: Text(item),);
+                    }).toList(), onChanged:null,value: selectedGrievanceType,),
+                  ],
                 ),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: date,icon: Icons.abc_outlined,text: "Date"),
+                CustomInputField().customInputField(controller: date,icon: Icons.abc_outlined,text: "Date",readOnly: true),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: subject,icon: Icons.abc_outlined,text: "Subject"),
+                CustomInputField().customInputField(controller: subject,icon: Icons.abc_outlined,text: "Subject",readOnly: true),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: details,icon: Icons.abc_outlined,text: "Details",maxLines: 5),
+                CustomInputField().customInputField(controller: details,icon: Icons.abc_outlined,text: "Details",maxLines: 5,readOnly: true),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: grievanceId,icon: Icons.abc_outlined,text: "Gri. Id"),
+                CustomInputField().customInputField(controller: grievanceId,icon: Icons.abc_outlined,text: "Gri. Id",readOnly: true),
                 const SizedBox(height: 15,),
                 Consumer<NavigateToPage>(
                   builder: (context, value, child) {

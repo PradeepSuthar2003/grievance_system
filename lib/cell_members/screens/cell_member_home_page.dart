@@ -16,6 +16,8 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
   PostGrievanceType postGrievanceType = PostGrievanceType();
   AllUserGrievance allUserGrievance = AllUserGrievance();
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState(){
     super.initState();
@@ -26,6 +28,7 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
       child: Scaffold(
+        key: _scaffoldKey,
         drawer: Drawer(
           backgroundColor: const Color(0xFFFFFFFF),
           child: SingleChildScrollView(
@@ -53,6 +56,7 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
                         falseAllActiveMenuItem();
                         allUserGrievance.isSelected = true;
                         value.navigateTo(currWidget: AllUserGrievance().allUserGrievance(context: context), context: context);
+                        closeDrawer();
                       });
                     },
                   ),
@@ -63,6 +67,7 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
                         falseAllActiveMenuItem();
                         postGrievanceType.isSelected = true;
                         value.navigateTo(currWidget: PostGrievanceType().postGrievanceType(context: context), context: context);
+                        closeDrawer();
                       });
                     },
                   ),
@@ -104,5 +109,11 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
   void falseAllActiveMenuItem(){
     postGrievanceType.isSelected = false;
     allUserGrievance.isSelected = false;
+  }
+
+  void closeDrawer() async{
+    Future.delayed(const Duration(microseconds: 1024),() {
+      _scaffoldKey.currentState!.openEndDrawer();
+    },);
   }
 }

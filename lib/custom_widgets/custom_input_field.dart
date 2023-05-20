@@ -6,10 +6,12 @@ class CustomInputField{
     required String text,
     TextInputType inputType = TextInputType.text,
     int maxLines = 1,
+    bool readOnly = false,
     required TextEditingController controller
   })
   {
     return TextFormField(
+      readOnly: readOnly,
       controller: controller,
       maxLines: maxLines,
       keyboardType:inputType,

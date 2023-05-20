@@ -24,6 +24,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
   AllBatchPage allBatchPage = AllBatchPage();
   UsersPage usersPage = UsersPage();
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState(){
@@ -36,6 +37,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
       child: Scaffold(
+        key: _scaffoldKey,
         drawer: Drawer(
           backgroundColor: const Color(0xFFFFFFFF),
           child: SingleChildScrollView(
@@ -64,6 +66,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         allGrievance.isSelected = true;
                         value.context = context;
                         value.navigateTo(context: context,currWidget: allGrievance.allGrievance());
+                        closeDrawer();
                       });
                     },
                   ),
@@ -74,6 +77,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         falseAllMenuActive();
                         addGrievancePage.isSelected = true;
                         value.navigateTo(context: context,currWidget: addGrievancePage.addGrievancePage());
+                        closeDrawer();
                       });
                     },
                   ),
@@ -86,6 +90,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         falseAllMenuActive();
                         usersPage.approvedSelected = true;
                         value.navigateTo(context: context,currWidget: usersPage.usersPage());
+                        closeDrawer();
                       });
                     },
                   ),
@@ -96,6 +101,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         falseAllMenuActive();
                         usersPage.unapprovedSelected = true;
                         value.navigateTo(context: context,currWidget: usersPage.usersPage());
+                        closeDrawer();
                       });
                     },
                   ),
@@ -108,6 +114,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         falseAllMenuActive();
                         allCoursePage.isSelected = true;
                         value.navigateTo(context: context,currWidget: allCoursePage.allCoursePage(context: value.context));
+                        closeDrawer();
                       });
                     },
                   ),
@@ -118,6 +125,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         falseAllMenuActive();
                         allBatchPage.isSelected = true;
                         value.navigateTo(context: context,currWidget: allBatchPage.allBatchPage(context: value.context));
+                        closeDrawer();
                       });
                     },
                   ),
@@ -163,5 +171,11 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
     usersPage.approvedSelected = false;
     usersPage.unapprovedSelected = false;
     addGrievancePage.isSelected = false;
+  }
+
+  void closeDrawer() async{
+    Future.delayed(const Duration(microseconds: 1024),() {
+      _scaffoldKey.currentState!.openEndDrawer();
+    },);
   }
 }

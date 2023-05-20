@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
+import 'package:lj_grievance/user/screens/my_grievances.dart';
+import 'package:lj_grievance/user/screens/post_new_grievance.dart';
 import 'package:provider/provider.dart';
 
 class UserHomePage extends StatefulWidget{
@@ -11,6 +13,10 @@ class UserHomePage extends StatefulWidget{
 class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
   //Menu class
   NavigateToPage navPage = NavigateToPage();
+  MyGrievance myGrievance = MyGrievance();
+  PostNewGrievance postNewGrievance = PostNewGrievance();
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState(){
@@ -22,6 +28,7 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
       child: Scaffold(
+        key: _scaffoldKey,
         drawer: Drawer(
           backgroundColor: const Color(0xFFFFFFFF),
           child: SingleChildScrollView(
@@ -45,8 +52,22 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "My grievance report",color: true?const Color(0xFF000044):const Color(0xFFEBF2F9),onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "My grievance report",color: myGrievance.isSelected?const Color(0xFF000044):const Color(0xFFEBF2F9),onclick: (){
                         falseAllMenuActive();
+                        myGrievance.isSelected = true;
+                        value.navigateTo(currWidget: myGrievance.myGrievance(context: value.context), context: context);
+                        closeDrawer();
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10,),
+                  Consumer<NavigateToPage>(
+                    builder: (context, value, child) {
+                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "Post new grievance",color: postNewGrievance.isSelected?const Color(0xFF000044):const Color(0xFFEBF2F9),onclick: (){
+                        falseAllMenuActive();
+                        postNewGrievance.isSelected = true;
+                        value.navigateTo(currWidget: postNewGrievance.postNewGrievance(context: value.context), context: context);
+                        closeDrawer();
                       });
                     },
                   ),
@@ -86,5 +107,13 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
   }
 
   void falseAllMenuActive(){
+    myGrievance.isSelected = false;
+    postNewGrievance.isSelected = false;
+  }
+
+  void closeDrawer() async{
+    Future.delayed(const Duration(microseconds: 1024),() {
+      _scaffoldKey.currentState!.openEndDrawer();
+    },);
   }
 }
