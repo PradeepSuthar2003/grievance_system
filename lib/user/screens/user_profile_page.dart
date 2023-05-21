@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
@@ -6,7 +8,9 @@ import 'package:lj_grievance/vaildation/validation.dart';
 
 class UserProfilePage extends StatelessWidget{
   UserProfilePage({super.key});
-
+  
+  FirebaseAuth auth = FirebaseAuth.instance;
+  
   final _formKey = GlobalKey<FormState>();
   final _changePasswordKey = GlobalKey<FormState>();
 
@@ -61,6 +65,12 @@ class UserProfilePage extends StatelessWidget{
                       const SizedBox(height: 10,),
                       const Divider(),
                       const SizedBox(height: 20,),
+                      CustomMenuItem().customMenuItem(icon:Icons.exit_to_app,text: "SignOut", onclick: () {
+                        auth.signOut();
+                        Session().userId = "";
+                        Navigator.pushNamedAndRemoveUntil(context, 'signup_page', (route) => false);
+                      }, color: Colors.white),
+                      const SizedBox(height: 10,),
                       CustomMenuItem().customMenuItem(icon:Icons.change_circle_outlined,text: "Change Password", onclick: (){
                         showDialog(context: context, builder: (context){
                           return AlertDialog(

@@ -17,6 +17,7 @@ class LoginModel with ChangeNotifier{
       Session().userId = value.user!.uid;
       isLoading=false;
       notifyListeners();
+      Navigator.pushNamedAndRemoveUntil(context, 'user_home_page', (route) => false);
       ErrorMessage().errorMessage(context: context, errorMessage: "Login successfully");
     }).onError((error, stackTrace) {
       isLoading=false;

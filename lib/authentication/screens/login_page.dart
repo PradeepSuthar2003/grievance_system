@@ -103,11 +103,11 @@ class _LoginPage extends State<LoginPage>{
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(onPressed: (){
-                            Navigator.pop(context);
+                            Navigator.pushNamedAndRemoveUntil(context, 'signup_page', (route) => false);
                           }, child: const Text("Signup",style: TextStyle(color: Colors.white),)),
                           Consumer<LoginModel>(
                             builder: (context, value, child) {
-                              return RoundedButton().roundedButton(icon: Icons.arrow_forward_ios,haveTwoChild: value.isLoading,color:Colors.indigo,child: const CircularProgressIndicator(),onClick: (){
+                              return RoundedButton().roundedButton(icon: Icons.arrow_forward_ios,haveTwoChild: value.isLoading,color:Colors.indigo,child: const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),onClick: (){
                                 if(_loginForm.currentState!.validate()){
                                   value.login(context: context,email: email.text.toString(), password: password.text.toString());
                                 }

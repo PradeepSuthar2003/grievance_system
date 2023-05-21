@@ -35,7 +35,7 @@ class GrievanceApp extends StatelessWidget{
         'cell_member_profile_page':(context) => CellMemberProfilePage(),
         'user_home_page':(context) => const UserHomePage(),
         'user_profile_page':(context) => UserProfilePage(),
-        'authenticate':(context) => const Authenticate(),
+        'authenticate':(context) => Authenticate(),
         'login_page':(context) => const LoginPage(),
         'signup_page':(context) => const SignUpPage(),
       },
