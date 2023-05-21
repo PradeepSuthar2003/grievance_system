@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
 import 'package:lj_grievance/models/login_model.dart';
