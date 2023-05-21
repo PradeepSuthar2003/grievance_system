@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomInputField{
+  bool obscureText = false;
   Widget customInputField({
     required IconData icon,
     required String text,
@@ -9,20 +10,25 @@ class CustomInputField{
     bool readOnly = false,
     bool obscureText = false,
     String? Function(String?)? validate,
+    VoidCallback? postIconClicked,
     Color themeColor = Colors.black,
+    IconData? postIcon,
+    IconData? passwordShowIcon,
     required TextEditingController controller
   })
   {
+    this.obscureText = obscureText;
     return TextFormField(
       style: TextStyle(color: themeColor),
       readOnly: readOnly,
-      obscureText: obscureText,
+      obscureText: this.obscureText,
       controller: controller,
       validator: validate,
       maxLines: maxLines,
       keyboardType:inputType,
       decoration: InputDecoration(
         prefixIcon: Icon(icon,color: themeColor,),
+        suffixIcon: IconButton(icon:Icon(this.obscureText?passwordShowIcon:postIcon,color:themeColor),color:themeColor,onPressed:postIconClicked,),
         hintText: text,
         hintStyle: TextStyle(color: themeColor),
         enabledBorder: OutlineInputBorder(
