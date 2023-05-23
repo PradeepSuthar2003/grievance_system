@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
@@ -15,15 +16,31 @@ class Authenticate extends StatelessWidget{
   }
 
   void checkLogin({required BuildContext context}) async{
-    await Future.delayed(const Duration(seconds: 2),() {
+    if(auth.currentUser!=null){
+      getRole(auth.currentUser!.uid.toString());
+    }
+    await Future.delayed(const Duration(seconds: 3),() {
       if(auth.currentUser!=null){
         Session().userId = auth.currentUser!.uid;
-        Navigator.pop(context);
-        Navigator.pushNamed(context, 'user_home_page');
+        if(Session().role == "admin"){
+          Navigator.pushNamedAndRemoveUntil(context, 'admin_home_page',(route) => false,);
+        }else if(Session().role == "member"){
+          Navigator.pushNamedAndRemoveUntil(context, 'cell_member_home_page',(route) => false,);
+        }else{
+          Navigator.pushNamedAndRemoveUntil(context, 'user_home_page',(route) => false,);
+        }
       }else{
-        Navigator.pop(context);
-        Navigator.pushNamed(context, 'signup_page');
+        Navigator.pushNamedAndRemoveUntil(context, 'login_page',(route) => false,);
       }
     },);
+  }
+
+  void getRole(String id){
+    FirebaseFirestore.instance.collection("users").doc(id).get().then((DocumentSnapshot snapshot){
+      if(snapshot.exists){
+        var data = snapshot.data() as Map;
+        Session().role = data['role'];
+      }
+    });
   }
 }

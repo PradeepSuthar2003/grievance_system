@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
@@ -13,12 +14,15 @@ class CellMemberProfilePage extends StatelessWidget{
   final _changePasswordKey = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  final users = FirebaseFirestore.instance.collection("users");
+
   TextEditingController name =  TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController newPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context){
+    getUserInfo();
     return SafeArea(
       child: Scaffold(
           body: SingleChildScrollView(
@@ -65,6 +69,7 @@ class CellMemberProfilePage extends StatelessWidget{
                       CustomMenuItem().customMenuItem(icon:Icons.exit_to_app,text: "SignOut", onclick: () {
                         auth.signOut();
                         Session().userId = "";
+                        Session().role = "";
                         Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
                       }, color: Colors.white),
                       const SizedBox(height: 10,),
@@ -119,4 +124,15 @@ class CellMemberProfilePage extends StatelessWidget{
       ),
     );
   }
+
+  void getUserInfo(){
+    users.doc(Session().userId).get().then((DocumentSnapshot snapshot){
+      if(snapshot.exists){
+        var data = snapshot.data() as Map;
+        name.text = data['name'];
+        email.text = data['email'];
+      }
+    });
+  }
+
 }

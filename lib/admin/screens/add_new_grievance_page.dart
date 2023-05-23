@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/Utils/gender_group.dart';
@@ -23,6 +24,7 @@ class AddGrievancePage with ChangeNotifier{
   final _formKey = GlobalKey<FormState>();
 
   final addGrievanceUser = FirebaseFirestore.instance.collection("users");
+  final auth = FirebaseAuth.instance;
 
   late BuildContext thisPageContext;
 
@@ -130,21 +132,23 @@ class AddGrievancePage with ChangeNotifier{
   }
 
   void createGrievanceCellMember(){
-    String id = DateTime.now().millisecondsSinceEpoch.toString();
-
-    addGrievanceUser.doc(id).set({
-      "approved_status":"2",
-      "contact":contact.text.toString(),
-      "designation":designation.text.toString(),
-      "email":email.text.toString(),
-      "password":password.text.toString(),
-      "gender":gender.toString().substring(7),
-      "name":name.text.toString(),
-      "id":id,
-      "role":"member"
-    }).then((value){
-      emptyForm();
-      ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "New member added");
+    auth.createUserWithEmailAndPassword(email: email.text.toString(), password: password.text.toString()).then((value){
+      addGrievanceUser.doc(auth.currentUser!.uid).set({
+        "approved_status":"2",
+        "contact":contact.text.toString(),
+        "designation":designation.text.toString(),
+        "email":email.text.toString(),
+        "password":password.text.toString(),
+        "gender":gender.toString().substring(7),
+        "name":name.text.toString(),
+        "id":auth.currentUser!.uid,
+        "role":"member"
+      }).then((value){
+        emptyForm();
+        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "New member added");
+      }).onError((error, stackTrace){
+        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "$error".substring(30),ifError: true);
+      });
     });
   }
 }

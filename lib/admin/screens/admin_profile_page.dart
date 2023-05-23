@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
@@ -11,6 +12,8 @@ class AdminProfilePage extends StatelessWidget{
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  final users = FirebaseFirestore.instance.collection("users");
+
   final _formKey = GlobalKey<FormState>();
   final _changePasswordKey = GlobalKey<FormState>();
 
@@ -20,6 +23,7 @@ class AdminProfilePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
+    getUserInfo();
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -67,13 +71,13 @@ class AdminProfilePage extends StatelessWidget{
                   CustomMenuItem().customMenuItem(icon:Icons.exit_to_app,text: "SignOut", onclick: () {
                     auth.signOut();
                     Session().userId = "";
+                    Session().role = "";
                     Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
                   }, color: Colors.white),
                   const SizedBox(height: 10,),
                   CustomMenuItem().customMenuItem(icon:Icons.change_circle_outlined,text: "Change Password", onclick: (){
                     showDialog(context: context, builder: (context){
                       return AlertDialog(
-
                         title: Form(
                           key: _changePasswordKey,
                           child: Padding(
@@ -118,5 +122,15 @@ class AdminProfilePage extends StatelessWidget{
         )
       ),
     );
+  }
+
+  void getUserInfo(){
+    users.doc(Session().userId).get().then((DocumentSnapshot snapshot){
+      if(snapshot.exists){
+          var data = snapshot.data() as Map;
+          name.text = data['name'];
+          email.text = data['email'];
+      }
+    });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/admin/screens/add_new_grievance_page.dart';
@@ -5,6 +6,7 @@ import 'package:lj_grievance/admin/screens/all_grievance_page.dart';
 import 'package:lj_grievance/admin/screens/approved_and_unapproved_user_page.dart';
 import 'package:lj_grievance/admin/screens/batch_page.dart';
 import 'package:lj_grievance/admin/screens/courses_page.dart';
+import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:provider/provider.dart';
 
@@ -24,12 +26,14 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
   AllBatchPage allBatchPage = AllBatchPage();
   UsersPage usersPage = UsersPage();
 
+  String profileName = "Unknown";
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState(){
     super.initState();
-    controller = TabController(length: 2, vsync: this);
+    getUserInfo();
   }
 
   @override
@@ -53,7 +57,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   ),
                   const Divider(),
                   const SizedBox(height: 20,),
-                  CustomMenuItem().customMenuItem(icon: Icons.person_2_outlined,color:const Color(0xFFFFFFFF),text: "Pradeep Suthar",onclick: (){
+                  CustomMenuItem().customMenuItem(icon: Icons.person_2_outlined,color:const Color(0xFFFFFFFF),text: profileName,onclick: (){
                     Navigator.pushNamed(context, 'admin_profile');
                   }),
                   const SizedBox(height: 20,),
@@ -177,5 +181,14 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
     Future.delayed(const Duration(microseconds: 1024),() {
       _scaffoldKey.currentState!.openEndDrawer();
     },);
+  }
+
+  void getUserInfo(){
+    FirebaseFirestore.instance.collection("users").doc(Session().userId).get().then((DocumentSnapshot snapshot){
+      if(snapshot.exists){
+        var data = snapshot.data() as Map;
+        profileName = data['name'];
+      }
+    });
   }
 }

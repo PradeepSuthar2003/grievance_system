@@ -47,7 +47,7 @@ class SignUpModel with ChangeNotifier {
     }).onError((error, stackTrace){
       isLoading=false;
       notifyListeners();
-      ErrorMessage().errorMessage(context: context, errorMessage: "some went wrong",ifError: true);
+      ErrorMessage().errorMessage(context: context, errorMessage: "$error".substring(30),ifError: true);
     });
   }
 
@@ -55,4 +55,3 @@ class SignUpModel with ChangeNotifier {
     notifyListeners();
   }
 }
-

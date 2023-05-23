@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
+import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:lj_grievance/user/screens/my_grievances.dart';
 import 'package:lj_grievance/user/screens/post_new_grievance.dart';
@@ -18,9 +20,12 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String profileName = "Unknown";
+
   @override
   void initState(){
     super.initState();
+    getUserInfo();
   }
 
   @override
@@ -44,7 +49,7 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
                   ),
                   const Divider(),
                   const SizedBox(height: 20,),
-                  CustomMenuItem().customMenuItem(icon: Icons.person_2_outlined,color:const Color(0xFFFFFFFF),text: "Pradeep Suthar",onclick: (){
+                  CustomMenuItem().customMenuItem(icon: Icons.person_2_outlined,color:const Color(0xFFFFFFFF),text:profileName,onclick: (){
                     Navigator.pushNamed(context, 'user_profile_page');
                   }),
                   const SizedBox(height: 20,),
@@ -115,5 +120,14 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
     Future.delayed(const Duration(microseconds: 1024),() {
       _scaffoldKey.currentState!.openEndDrawer();
     },);
+  }
+
+  void getUserInfo(){
+    FirebaseFirestore.instance.collection("users").doc(Session().userId).get().then((DocumentSnapshot snapshot){
+      if(snapshot.exists){
+        var data = snapshot.data() as Map;
+        profileName = data['name'];
+      }
+    });
   }
 }
