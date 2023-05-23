@@ -68,7 +68,7 @@ class UserProfilePage extends StatelessWidget{
                       CustomMenuItem().customMenuItem(icon:Icons.exit_to_app,text: "SignOut", onclick: () {
                         auth.signOut();
                         Session().userId = "";
-                        Navigator.pushNamedAndRemoveUntil(context, 'signup_page', (route) => false);
+                        Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
                       }, color: Colors.white),
                       const SizedBox(height: 10,),
                       CustomMenuItem().customMenuItem(icon:Icons.change_circle_outlined,text: "Change Password", onclick: (){

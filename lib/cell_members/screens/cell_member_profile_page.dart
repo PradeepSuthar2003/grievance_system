@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
@@ -9,6 +11,7 @@ class CellMemberProfilePage extends StatelessWidget{
 
   final _formKey = GlobalKey<FormState>();
   final _changePasswordKey = GlobalKey<FormState>();
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   TextEditingController name =  TextEditingController();
   TextEditingController email = TextEditingController();
@@ -58,6 +61,12 @@ class CellMemberProfilePage extends StatelessWidget{
 
                         }
                       },style: ButtonStyle(elevation: MaterialStateProperty.all(0)),child: const Text("Change Profile"),),
+                      const SizedBox(height: 10,),
+                      CustomMenuItem().customMenuItem(icon:Icons.exit_to_app,text: "SignOut", onclick: () {
+                        auth.signOut();
+                        Session().userId = "";
+                        Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
+                      }, color: Colors.white),
                       const SizedBox(height: 10,),
                       const Divider(),
                       const SizedBox(height: 20,),

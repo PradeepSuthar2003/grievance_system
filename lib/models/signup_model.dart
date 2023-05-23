@@ -55,3 +55,4 @@ class SignUpModel with ChangeNotifier {
     notifyListeners();
   }
 }
+

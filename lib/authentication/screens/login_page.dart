@@ -41,10 +41,10 @@ class _LoginPage extends State<LoginPage>{
           child: Form(
             key: _loginForm,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: MediaQuery.of(context).size.height * 0.15),
+              padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: MediaQuery.of(context).size.height * 0.18),
               child: Container(
                 width: 400,
-                height: 500,
+                height: 430,
                 decoration: const BoxDecoration(
                   color: Color(0xFF152238),
                   borderRadius: BorderRadius.all(Radius.circular(15.0)),
@@ -82,21 +82,6 @@ class _LoginPage extends State<LoginPage>{
                         },
                       ),
                       const SizedBox(height: 20,),
-                      Consumer<LoginModel>(
-                          builder:(context, value, child) {
-                            return Row(
-                              children: [
-                                const Text("User type\t\t\t\t",style: TextStyle(color: Colors.white),),
-                                Expanded(
-                                  child: DropdownButton(dropdownColor: const Color(0xFF152238),items: usersType.map((String item){
-                                    return DropdownMenuItem(value: item,child: Text(item,style: const TextStyle(color: Colors.white70),));
-                                  }).toList(), onChanged: (val){selectedUserType = val;value.notifyListeners();},value: selectedUserType,),
-                                ),
-                              ],
-                            );
-                          },
-                      ),
-                      const SizedBox(height: 10,),
                       const Divider(),
                       const SizedBox(height: 30,),
                       Row(
