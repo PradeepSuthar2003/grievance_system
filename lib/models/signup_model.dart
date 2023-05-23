@@ -9,6 +9,8 @@ class SignUpModel with ChangeNotifier {
 
   final ref = FirebaseFirestore.instance.collection("users");
 
+  final batch = FirebaseFirestore.instance.collection("batch");
+
   void signUp(
       {required String name,
       required String gender,
@@ -40,11 +42,15 @@ class SignUpModel with ChangeNotifier {
       isLoading=false;
       notifyListeners();
       ErrorMessage().errorMessage(context: context, errorMessage: "Signup successfully");
-      Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, 'signup_page', (route) => false);
     }).onError((error, stackTrace){
       isLoading=false;
       notifyListeners();
       ErrorMessage().errorMessage(context: context, errorMessage: "some went wrong",ifError: true);
     });
+  }
+
+  void changeDone(){
+    notifyListeners();
   }
 }

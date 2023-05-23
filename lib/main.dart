@@ -23,7 +23,7 @@ class GrievanceApp extends StatelessWidget{
   Widget build(BuildContext context){
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: 'authenticate',
+      initialRoute: 'admin_home_page',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

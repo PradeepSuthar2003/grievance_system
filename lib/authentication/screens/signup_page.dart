@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/gender_group.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
@@ -16,11 +17,11 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPage extends State<SignUpPage> {
   Gender? gender = Gender.Male;
 
-  List<String> courseTypeList = ['MCA', 'BCA', 'IMCA'];
-  String selectedCourseTypeList = "";
+  List<dynamic> courseTypeList = [];
+  dynamic selectedCourseTypeList;
 
-  List<String> batchTypeList = ['2022', '2019', '2020'];
-  String selectedBatchTypeList = "";
+  List<dynamic> batchTypeList = [];
+  dynamic selectedBatchTypeList;
 
   TextEditingController email = TextEditingController();
   TextEditingController enrollmentNo = TextEditingController();
@@ -30,11 +31,18 @@ class _SignUpPage extends State<SignUpPage> {
 
   final _signupForm = GlobalKey<FormState>();
 
+  final courses = FirebaseFirestore.instance.collection("courses").where("course_name");
+  final batch = FirebaseFirestore.instance.collection("batch").where("batch_year");
+
+  SignUpModel signUpModel = SignUpModel();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBatch();
+  }
   @override
   Widget build(BuildContext context) {
-    selectedCourseTypeList = courseTypeList[0];
-    selectedBatchTypeList = batchTypeList[0];
-
     return ChangeNotifierProvider<SignUpModel>(
       create: (context) => SignUpModel(),
       child: Scaffold(
@@ -147,6 +155,7 @@ class _SignUpPage extends State<SignUpPage> {
                       ),
                       Consumer<SignUpModel>(
                         builder: (context, value, child) {
+                          signUpModel=value;
                           return Row(
                             children: [
                               const Text(
@@ -156,7 +165,7 @@ class _SignUpPage extends State<SignUpPage> {
                               Expanded(
                                 child: DropdownButton(
                                   dropdownColor: const Color(0xFF152238),
-                                  items: courseTypeList.map((String item) {
+                                  items: courseTypeList.map((dynamic item) {
                                     return DropdownMenuItem(
                                         value: item,
                                         child: Text(
@@ -190,7 +199,7 @@ class _SignUpPage extends State<SignUpPage> {
                               Expanded(
                                 child: DropdownButton(
                                   dropdownColor: const Color(0xFF152238),
-                                  items: batchTypeList.map((String item) {
+                                  items: batchTypeList.map((dynamic item) {
                                     return DropdownMenuItem(
                                         value: item,
                                         child: Text(
@@ -200,7 +209,7 @@ class _SignUpPage extends State<SignUpPage> {
                                         ));
                                   }).toList(),
                                   onChanged: (val) {
-                                    selectedBatchTypeList = val!;
+                                    selectedBatchTypeList = val;
                                     value.notifyListeners();
                                   },
                                   value: selectedBatchTypeList,
@@ -338,5 +347,27 @@ class _SignUpPage extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  void fetchBatch() async{
+    batch.get().then((QuerySnapshot snapshot){
+      for(int i=0;i<snapshot.size;i++){
+        var data = snapshot.docs[i].data() as Map;
+        batchTypeList.add(data['batch_year']);
+      }
+      selectedBatchTypeList = batchTypeList[0];
+    });
+
+    courses.get().then((QuerySnapshot snapshot){
+      for(int i=0;i<snapshot.size;i++){
+        var data = snapshot.docs[i].data() as Map;
+        courseTypeList.add(data['course_name']);
+      }
+      selectedCourseTypeList = courseTypeList[0];
+    });
+
+    await Future.delayed(const Duration(milliseconds: 1000),(){
+      signUpModel.changeDone();
+    });
   }
 }
