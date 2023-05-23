@@ -65,7 +65,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                         falseAllMenuActive();
                         allGrievance.isSelected = true;
                         value.context = context;
-                        value.navigateTo(context: context,currWidget: allGrievance.allGrievance());
+                        value.navigateTo(context: context,currWidget: allGrievance.allGrievance(context: value.context));
                         closeDrawer();
                       });
                     },
@@ -76,7 +76,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                       return CustomMenuItem().customMenuItem(icon: Icons.plus_one,color: addGrievancePage.isSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Add new grievance type",onclick: (){
                         falseAllMenuActive();
                         addGrievancePage.isSelected = true;
-                        value.navigateTo(context: context,currWidget: addGrievancePage.addGrievancePage());
+                        value.navigateTo(context: context,currWidget: addGrievancePage.addGrievancePage(context: value.context));
                         closeDrawer();
                       });
                     },
@@ -89,7 +89,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                       return CustomMenuItem().customMenuItem(icon: Icons.published_with_changes,color: usersPage.approvedSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Approved users",onclick: (){
                         falseAllMenuActive();
                         usersPage.approvedSelected = true;
-                        value.navigateTo(context: context,currWidget: usersPage.usersPage());
+                        value.navigateTo(context: context,currWidget: usersPage.usersPage(approvedSelect: true,context: value.context));
                         closeDrawer();
                       });
                     },
@@ -100,7 +100,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                       return CustomMenuItem().customMenuItem(icon: Icons.unpublished_outlined,color: usersPage.unapprovedSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Unapproved users",onclick: (){
                         falseAllMenuActive();
                         usersPage.unapprovedSelected = true;
-                        value.navigateTo(context: context,currWidget: usersPage.usersPage());
+                        value.navigateTo(context: context,currWidget: usersPage.usersPage(context: value.context));
                         closeDrawer();
                       });
                     },

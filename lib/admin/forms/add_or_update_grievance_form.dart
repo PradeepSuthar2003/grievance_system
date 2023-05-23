@@ -18,7 +18,12 @@ class AdUpGrievanceForm{
   TextEditingController contact = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  Widget adUpGrievanceForm({BuildContext? context}){
+  String id="";
+
+  final users = FirebaseFirestore.instance.collection("users");
+
+  Widget adUpGrievanceForm({BuildContext? context,int index = 0}){
+    fetchUserInfo(index);
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
       child: SingleChildScrollView(
@@ -39,32 +44,8 @@ class AdUpGrievanceForm{
                   return null;
                 }),
                 const SizedBox(height: 15,),
-
-                Consumer<NavigateToPage>(
-                  builder: (context, value, child) {
-                    return Row(
-                      children: [
-                        const Text("Gender",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),),
-                        RadioMenuButton(value: Gender.Male, groupValue: gender, onChanged:(val) {
-                          gender = val;
-                          value.notifyListeners();
-                        }, child: const Text("Male",style: TextStyle(fontSize: 10),)),
-                        RadioMenuButton(value: Gender.Female, groupValue: gender, onChanged:(val) {
-                          gender = val;
-                          value.notifyListeners();
-                        }, child: const Text("Female",style: TextStyle(fontSize: 10),)),
-                        RadioMenuButton(value:Gender.Other, groupValue: gender, onChanged:(val) {
-                          gender = val;
-                          value.notifyListeners();
-                        }, child: const Text("Other",style: TextStyle(fontSize: 10),)),
-                      ],
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 15,),
                 CustomInputField().customInputField(controller: designation,icon: Icons.description_outlined,text: "Designation",validate: (value){
-                  if(value!.isNotNull){
+                  if(value.toString().trim() == ""){
                     return "Enter designation";
                   }
                   return null;
@@ -78,7 +59,7 @@ class AdUpGrievanceForm{
                 }),
                 const SizedBox(height: 15,),
                 CustomInputField().customInputField(controller: contact,icon: Icons.contact_page_outlined,text: "Contact no",inputType: TextInputType.number,validate: (value){
-                  if(value!.isNotNull){
+                  if(value.toString().trim()==""){
                     return "Enter contact";
                   }
                   return null;
@@ -101,12 +82,35 @@ class AdUpGrievanceForm{
             }, child: const Text("Cancel")),
             TextButton(onPressed: (){
               if(_formKey.currentState!.validate()){
-
+                updateUserInfo();
+                Navigator.pop(context!);
               }
             }, child: const Text("Update"))
           ],
         ),
       ),
     );
+  }
+
+  void fetchUserInfo(int index){
+    users.where("").get().then((QuerySnapshot snapshot){
+      var data = snapshot.docs[index].data() as Map;
+      id = data['id'].toString();
+      name.text = data['name'].toString();
+      designation.text = data['designation'].toString();
+      email.text = data['email'].toString();
+      contact.text = data['contact'].toString();
+      password.text = data['password'].toString();
+    });
+  }
+
+  void updateUserInfo(){
+    users.doc(id).update({
+      "name":name.text.toString(),
+      "designation":designation.text.toString(),
+      "email":email.text.toString(),
+      "contact":contact.text.toString(),
+      "password":password.text.toString()
+    });
   }
 }

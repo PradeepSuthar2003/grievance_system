@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lj_grievance/admin/screens/all_grievance_page.dart';
 
 class NavigateToPage with ChangeNotifier{
   late BuildContext context;

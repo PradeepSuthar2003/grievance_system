@@ -8,7 +8,10 @@ class UsersPage{
 
   final users = FirebaseFirestore.instance.collection("users").snapshots();
 
-  Widget usersPage({BuildContext? context}){
+  late BuildContext thisPageContext;
+
+  Widget usersPage({BuildContext? context,bool approvedSelect = false}){
+    thisPageContext = context!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -16,7 +19,8 @@ class UsersPage{
           padding: const EdgeInsets.all(20.0),
           child: Text(approvedSelected == true ? "Approved users":"UnApproved users",style: const TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
         ),
-        StreamBuilder<QuerySnapshot>(stream: users,
+        StreamBuilder<QuerySnapshot>(
+          stream: users,
           builder: (context, AsyncSnapshot<QuerySnapshot>snapshot) {
 
           if(snapshot.connectionState == ConnectionState.waiting){
@@ -25,20 +29,22 @@ class UsersPage{
           if(snapshot.hasError){
             return const Center(child: Center(child: Text("something went wrong")));
           }
-          if(approvedSelected == true){
+          if(approvedSelect){
             return Expanded(
               child: ListView.builder(itemBuilder:(context, index) {
-                if(snapshot.data!.docs[index]['approved_status'] != "0"){
+                if(snapshot.data!.docs[index]['approved_status'] == "1"){
                   return userListTile(context, snapshot, index);
                 }
+                return Container();
               },itemCount: snapshot.data!.docs.length,),
             );
           }else{
             return Expanded(
               child: ListView.builder(itemBuilder:(context, index) {
-                if(snapshot.data!.docs[index]['approved_status'] != "1"){
+                if(snapshot.data!.docs[index]['approved_status'] == "0"){
                   return userListTile(context, snapshot, index);
                 }
+                return Container();
               },itemCount: snapshot.data!.docs.length,),
             );
           }
@@ -51,10 +57,10 @@ class UsersPage{
     return ListTile(
       leading: const CircleAvatar(child: Icon(Icons.person_2_outlined),),
       title: Text(snapshot.data!.docs[index]['name']),
-      subtitle: Text(snapshot.data!.docs[index]['approved_status']),
+      subtitle: Text((snapshot.data!.docs[index]['approved_status']!="0")?"Approved":"Unapproved"),
       trailing: context!=null?IconButton(onPressed: (){
         showDialog(context: context, builder: (context){
-          return UserForm().userForm(context: context);
+          return UserForm().userForm(context: thisPageContext,index:index,approved:approvedSelected);
         });
       }, icon: const CircleAvatar(child: Icon(Icons.edit))):const Text(""),
     );

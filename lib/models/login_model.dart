@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
 
 class LoginModel with ChangeNotifier{
-
+  
+  final users = FirebaseFirestore.instance.collection("users");
+  
   FirebaseAuth auth = FirebaseAuth.instance;
 
   bool isLoading = false;
@@ -14,6 +17,7 @@ class LoginModel with ChangeNotifier{
     isLoading=true;
     notifyListeners();
     await auth.signInWithEmailAndPassword(email: email, password: password).then((value){
+      
       Session().userId = value.user!.uid;
       isLoading=false;
       notifyListeners();

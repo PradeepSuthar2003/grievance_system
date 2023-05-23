@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/Utils/gender_group.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
@@ -19,7 +21,13 @@ class AddGrievancePage with ChangeNotifier{
   TextEditingController password = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  Widget addGrievancePage(){
+
+  final addGrievanceUser = FirebaseFirestore.instance.collection("users");
+
+  late BuildContext thisPageContext;
+
+  Widget addGrievancePage({BuildContext? context}){
+    thisPageContext = context!;
     return SingleChildScrollView(
       child: ChangeNotifierProvider<NavigateToPage>(
         create: (context) => NavigateToPage(),
@@ -65,7 +73,7 @@ class AddGrievancePage with ChangeNotifier{
 
                 const SizedBox(height: 15,),
                 CustomInputField().customInputField(controller: designation,icon: Icons.description_outlined,text: "Designation",validate: (value){
-                  if(value!.isNotNull){
+                  if(value.toString().trim() == ""){
                     return "Enter designation";
                   }
                   return null;
@@ -79,7 +87,7 @@ class AddGrievancePage with ChangeNotifier{
                 }),
                 const SizedBox(height: 15,),
                 CustomInputField().customInputField(controller: contact,icon: Icons.contact_page_outlined,text: "Contact no",inputType: TextInputType.number,validate: (value){
-                  if(value!.isNotNull){
+                  if(value.toString().trim()==""){
                     return "Enter contact no";
                   }
                   return null;
@@ -99,7 +107,7 @@ class AddGrievancePage with ChangeNotifier{
                     const Text("Add member"),
                     RoundedButton().roundedButton(icon: Icons.add,onClick: (){
                       if(_formKey.currentState!.validate()){
-
+                        createGrievanceCellMember();
                       }
                     }),
                   ],
@@ -111,5 +119,32 @@ class AddGrievancePage with ChangeNotifier{
         ),
       ),
     );
+  }
+
+  void emptyForm(){
+    name.text = "";
+    email.text = "";
+    designation.text = "";
+    password.text = "";
+    contact.text = "";
+  }
+
+  void createGrievanceCellMember(){
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+
+    addGrievanceUser.doc(id).set({
+      "approved_status":"2",
+      "contact":contact.text.toString(),
+      "designation":designation.text.toString(),
+      "email":email.text.toString(),
+      "password":password.text.toString(),
+      "gender":gender.toString().substring(7),
+      "name":name.text.toString(),
+      "id":id,
+      "role":"member"
+    }).then((value){
+      emptyForm();
+      ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "New member added");
+    });
   }
 }

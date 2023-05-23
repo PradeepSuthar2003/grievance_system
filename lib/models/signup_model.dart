@@ -36,7 +36,8 @@ class SignUpModel with ChangeNotifier {
         'email':email,
         'contact':contact,
         'password':password,
-        'approved_status':'0'
+        'approved_status':'0',
+        'role':'user',
       }
     ).then((value){
       isLoading=false;

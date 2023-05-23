@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/vaildation/validation.dart';
@@ -8,10 +11,10 @@ class UserForm{
 
   final _formKey = GlobalKey<FormState>();
 
-  List<String> courseList = ['MCA','BCA'];
+  List<String> courseList = [];
   String? selectedCourse;
 
-  List<String> batchList = ['2018','2019'];
+  List<String> batchList = [];
   String? selectedBatch;
 
   List<String> approvalList = ['Approved','Unapproved'];
@@ -24,11 +27,24 @@ class UserForm{
   TextEditingController contact = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  Widget userForm({BuildContext? context}){
-    selectedCourse = courseList[0];
-    selectedBatch = batchList[0];
-    selectedApproval = approvalList[0];
+  late int index;
+  String id = "";
+  String? gender;
 
+  final users = FirebaseFirestore.instance.collection("users");
+  final courses = FirebaseFirestore.instance.collection("courses").where("course_name");
+  final batch = FirebaseFirestore.instance.collection("batch").where("batch_year");
+  final auth = FirebaseAuth.instance;
+
+  int runTime = 0;
+  NavigateToPage navigateToPage = NavigateToPage();
+
+  late BuildContext thisPageContext;
+  Widget userForm({BuildContext? context,int? index,bool approved=false}){
+    thisPageContext = context!;
+    this.index=index!;
+    fetchBatch();
+    fetchUserInfo();
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
       child: SingleChildScrollView(
@@ -49,8 +65,8 @@ class UserForm{
                   return null;
                 }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Enter enroll",inputType: TextInputType.number,validate: (value){
-                  if(value!.isNotNull){
+                CustomInputField().customInputField(controller: enroll,icon: Icons.abc_outlined,text: "Enter enroll",inputType: TextInputType.number,validate: (value){
+                  if(value.toString().trim() == ""){
                     return "Enter valid enrollment";
                   }
                   return null;
@@ -58,6 +74,7 @@ class UserForm{
                 const SizedBox(height: 15,),
                 Consumer<NavigateToPage>(
                   builder: (context, value, child) {
+                    navigateToPage=value;
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -93,7 +110,7 @@ class UserForm{
                 }),
                 const SizedBox(height: 15,),
                 CustomInputField().customInputField(controller: contact,icon: Icons.contact_page_outlined,text: "Contact no",inputType: TextInputType.number,validate: (value){
-                  if(value!.isNotNull){
+                  if(value.toString().trim() == ""){
                     return "Enter contact";
                   }
                   return null;
@@ -114,7 +131,7 @@ class UserForm{
                         const Text("Approve status"),
                         DropdownButton(items: approvalList.map((String item){
                           return DropdownMenuItem(value: item,child: Text(item),);
-                        }).toList(), onChanged: (val){ selectedApproval = val; value.notifyListeners();},value: selectedApproval,),
+                        }).toList(), onChanged: approved?null:(val){ selectedApproval = val as String?; value.notifyListeners();},value: selectedApproval,),
                       ],
                     );
                   },
@@ -126,11 +143,23 @@ class UserForm{
         ),
           actions: [
             TextButton(onPressed: (){
-              Navigator.pop(context!);
+              Navigator.pop(context);
             }, child: const Text("Cancel")),
             TextButton(onPressed: (){
               if(_formKey.currentState!.validate()){
-
+                if(selectedApproval == "Approved" && !approved){
+                  auth.createUserWithEmailAndPassword(email: email.text.toString(), password: password.text.toString()).then((value){
+                    updateUser(id: auth.currentUser!.uid.toString(), approved: true);
+                    Navigator.pop(context);
+                  });
+                }else{
+                  if(auth.currentUser != null){
+                    auth.signInWithEmailAndPassword(email: email.text.toString(), password: password.text.toString());
+                    auth.currentUser!.delete();
+                  }
+                  updateUser(id:id);
+                  Navigator.pop(context);
+                }
               }
             }, child: const Text("Update"))
           ],
@@ -138,4 +167,87 @@ class UserForm{
       ),
     );
   }
+
+  void fetchUserInfo(){
+      users.where("").get().then((QuerySnapshot snapshot){
+        var data = snapshot.docs[index].data() as Map;
+        id = data['id'].toString();
+        name.text = data['name'].toString();
+        enroll.text = data['enrollment'].toString();
+        email.text = data['email'].toString();
+        contact.text = data['contact'].toString();
+        password.text = data['password'].toString();
+        gender = data['gender'].toString();
+
+        if(data['approved_status'] == '0'){
+          selectedApproval = "Unapproved";
+        }else{
+          selectedApproval = "Approved";
+        }
+        selectedCourse = data['course'].toString();
+        selectedBatch = data['batch'].toString();
+      });
+  }
+
+  void fetchBatch() async{
+    if(runTime==0){
+      runTime = 1;
+      batch.get().then((QuerySnapshot snapshot) {
+        for (int i = 0; i < snapshot.size; i++) {
+          var data = snapshot.docs[i].data() as Map;
+          batchList.insert(i,data['batch_year']);
+        }
+      });
+      courses.get().then((QuerySnapshot snapshot) {
+        for (int i = 0; i < snapshot.size; i++) {
+          var data = snapshot.docs[i].data() as Map;
+          courseList.insert(i,data['course_name']);
+        }
+      });
+      await Future.delayed(const Duration(milliseconds: 1000),(){
+        navigateToPage.notifyListeners();
+      });
+    }
+  }
+
+  void updateUser({required String id,bool approved=false}){
+    if(approved){
+      users.doc(this.id).delete().then((value){
+        users.doc(id).set(
+            {
+              'id':id,
+              'name':name.text.toString(),
+              'gender':gender,
+              'course':selectedCourse,
+              'batch':selectedBatch,
+              'enrollment':enroll.text.toString(),
+              'email':email.text.toString(),
+              'contact':contact.text.toString(),
+              'password':password.text.toString(),
+              'approved_status':approved?"1":"0",
+              'role':'user',
+            }
+        ).then((value){
+          ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Approved successfully");
+        }).onError((error, stackTrace){
+          ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Something went wrong",ifError: true);
+        });
+      });
+    }else{
+      users.doc(this.id).update({
+        "approved_status":selectedApproval == "Approved" && !approved?"1":"0",
+        "batch":selectedBatch,
+        "contact":contact.text.toString(),
+        "course":selectedCourse,
+        "email":email.text.toString(),
+        "enrollment":enroll.text.toString(),
+        "name":name.text.toString(),
+        "password":password.text.toString(),
+      }).then((value){
+        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Updated");
+      }).onError((error, stackTrace){
+        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Something went wrong",ifError: true);
+      });
+    }
+    }
 }
