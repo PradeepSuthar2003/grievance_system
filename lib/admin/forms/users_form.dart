@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
+import 'package:lj_grievance/models/approved_user_model.dart';
 import 'package:lj_grievance/vaildation/validation.dart';
 import 'package:provider/provider.dart';
 
@@ -102,7 +103,7 @@ class UserForm{
                 ),
 
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: email,icon: Icons.email_outlined,text: "Email",inputType: TextInputType.emailAddress,validate: (value){
+                CustomInputField().customInputField(readOnly: true,controller: email,icon: Icons.email_outlined,text: "Email",inputType: TextInputType.emailAddress,validate: (value){
                   if(!value!.isValidEmail){
                     return "Enter valid email";
                   }
@@ -116,7 +117,7 @@ class UserForm{
                   return null;
                 }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: password,icon: Icons.lock_outline,text: "Password",validate: (value){
+                CustomInputField().customInputField(readOnly: true,controller: password,icon: Icons.lock_outline,text: "Password",validate: (value){
                   if(!value!.isValidPassword){
                     return "Enter valid password";
                   }
@@ -145,19 +146,22 @@ class UserForm{
             TextButton(onPressed: (){
               Navigator.pop(context);
             }, child: const Text("Cancel")),
-            TextButton(onPressed: (){
-              if(_formKey.currentState!.validate()){
-                if(selectedApproval == "Approved" && !approved){
-                  auth.createUserWithEmailAndPassword(email: email.text.toString(), password: password.text.toString()).then((value){
-                    updateUser(id: auth.currentUser!.uid.toString(), approved: true);
-                    Navigator.pop(context);
-                  });
-                }else{
-                  updateUser(id:id);
-                  Navigator.pop(context);
-                }
-              }
-            }, child: const Text("Update"))
+            ChangeNotifierProvider<ApprovedUserModel>(
+              create: (context) => ApprovedUserModel(),
+              child: Consumer<ApprovedUserModel>(
+                builder: (context, value, child) {
+                  return TextButton(onPressed: (){
+                    if(_formKey.currentState!.validate()){
+                      if(selectedApproval == "Approved" && !approved){
+                          value.updateUser(alertContext: context,approved: true,oldId: id, newId: auth.currentUser!.uid.toString(), context: thisPageContext, name: name.text.toString(), gender: gender.toString(), selectedCourse: selectedCourse.toString(), selectedBatch: selectedBatch.toString(), enroll: enroll.text.toString(), email: email.text.toString(), contact: contact.text.toString(), password: password.text.toString(), selectedApproval: selectedApproval.toString());
+                      }else{
+                        value.updateUser(alertContext: context,oldId: id, newId: auth.currentUser!.uid.toString(), context: thisPageContext, name: name.text.toString(), gender: gender.toString(), selectedCourse: selectedCourse.toString(), selectedBatch: selectedBatch.toString(), enroll: enroll.text.toString(), email: email.text.toString(), contact: contact.text.toString(), password: password.text.toString(), selectedApproval: selectedApproval.toString());
+                      }
+                    }
+                  }, child: value.isLoading?const CircularProgressIndicator(): const Text("Update"));
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -206,44 +210,4 @@ class UserForm{
     }
   }
 
-  void updateUser({required String id,bool approved=false}){
-    if(approved){
-      users.doc(this.id).delete().then((value){
-        users.doc(id).set(
-            {
-              'id':id,
-              'name':name.text.toString(),
-              'gender':gender,
-              'course':selectedCourse,
-              'batch':selectedBatch,
-              'enrollment':enroll.text.toString(),
-              'email':email.text.toString(),
-              'contact':contact.text.toString(),
-              'password':password.text.toString(),
-              'approved_status':approved?"1":"0",
-              'role':'user',
-            }
-        ).then((value){
-          ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Approved successfully");
-        }).onError((error, stackTrace){
-          ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Something went wrong",ifError: true);
-        });
-      });
-    }else{
-      users.doc(this.id).update({
-        "approved_status":selectedApproval == "Approved" && !approved?"1":"0",
-        "batch":selectedBatch,
-        "contact":contact.text.toString(),
-        "course":selectedCourse,
-        "email":email.text.toString(),
-        "enrollment":enroll.text.toString(),
-        "name":name.text.toString(),
-        "password":password.text.toString(),
-      }).then((value){
-        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Updated");
-      }).onError((error, stackTrace){
-        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "Something went wrong",ifError: true);
-      });
-    }
-    }
 }

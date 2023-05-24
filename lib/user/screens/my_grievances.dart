@@ -7,28 +7,23 @@ import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 class MyGrievance{
   bool isSelected = false;
 
-  List<String> grievanceType = ['College issue','other'];
-  String? selectedGrievanceType;
-
   final postGrievance = FirebaseFirestore.instance.collection("grievances");
   final auth = FirebaseAuth.instance;
 
   TextEditingController subject = TextEditingController();
   TextEditingController details = TextEditingController();
 
-  String replyMessage = "";
   Widget myGrievance({BuildContext? context}){
-    //selectedGrievanceType = grievanceType[0];
     return Column(
       children: [
         StreamBuilder(
         stream: postGrievance.snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return const Center(child: CircularProgressIndicator(),);
-          }
           if(snapshot.hasError){
             return const Center(child: Text("Something went wrong"),);
+          }
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(child: CircularProgressIndicator(),);
           }
           return Expanded(child:
           ListView.builder(itemBuilder: (context, index) {
@@ -39,7 +34,6 @@ class MyGrievance{
                 subtitle: Text(snapshot.data!.docs[index]['details']),
                 trailing: snapshot.data!.docs[index]['reply'] == "0"?const Text("Open"):TextButton(child: const Text("View"),onPressed: (){
                   showDialog(context: context, builder: (context) {
-                    fetchMyGrievance(snapshot.data!.docs[index]['id']);
                     return SingleChildScrollView(
                       child: AlertDialog(
                         title: Container(
@@ -52,11 +46,7 @@ class MyGrievance{
                               Row(
                                 children: [
                                   const Text("Grievance type : \t\t"),
-                                  Expanded(
-                                    child: DropdownButton(items: grievanceType.map((String item){
-                                      return DropdownMenuItem(value: item,child: Text(item));
-                                    }).toList(), onChanged:null,value: selectedGrievanceType,),
-                                  ),
+                                  Text(snapshot.data!.docs[index]['grievance_type']),
                                 ],
                               ),
                               const SizedBox(height: 20,),
@@ -66,7 +56,7 @@ class MyGrievance{
                               const SizedBox(height: 10,),
                               const Text("Reply",style: TextStyle(fontSize: 10),),
                               const Divider(),
-                              Text(replyMessage=="0"?"":replyMessage,style: const TextStyle(fontSize: 13),),
+                              Text(snapshot.data!.docs[index]['reply']=="0"?"":snapshot.data!.docs[index]['reply'],style: const TextStyle(fontSize: 13),),
                               const SizedBox(height: 20,),
                               const Divider(),
                               TextButton(onPressed: (){
@@ -87,21 +77,5 @@ class MyGrievance{
         },),
       ],
     );
-  }
-
-  void fetchMyGrievance(String id){
-    FirebaseFirestore.instance
-        .collection("grievances")
-        .doc(id)
-        .get()
-        .then((DocumentSnapshot snapshot){
-      if(snapshot.exists){
-        var data = snapshot.data() as Map;
-        subject.text = data['subject'];
-        details.text = data['details'];
-        selectedGrievanceType = data['grievance_type'];
-        replyMessage = data['reply'];
-      }
-    });
   }
 }

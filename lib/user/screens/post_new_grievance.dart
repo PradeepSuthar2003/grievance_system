@@ -4,6 +4,7 @@ import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
+import 'package:lj_grievance/models/post_new_grievance_model.dart';
 import 'package:provider/provider.dart';
 
 class PostNewGrievance with ChangeNotifier{
@@ -23,7 +24,6 @@ class PostNewGrievance with ChangeNotifier{
 
   Widget postNewGrievance({BuildContext? context}){
     fetchGrievanceType();
-    selectedGrievanceType = grievanceType[0];
     return SingleChildScrollView(
       child: ChangeNotifierProvider<NavigateToPage>(
         create: (context) => NavigateToPage(),
@@ -64,16 +64,24 @@ class PostNewGrievance with ChangeNotifier{
                 }),
                 const SizedBox(height: 20,),
                 const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Submit"),
-                    RoundedButton().roundedButton(icon: Icons.chevron_right_sharp,onClick: (){
-                      if(_postNewGrievanceFormKey.currentState!.validate()){
-                        postGrievanceMessage();
-                      }
-                    })
-                  ],
+                ChangeNotifierProvider<PostNewGrievanceModel>(
+                  create: (context) => PostNewGrievanceModel(),
+                  child: Consumer<PostNewGrievanceModel>(
+                    builder: (context, value, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Submit"),
+                          RoundedButton().roundedButton(haveTwoChild: value.isLoading,child: const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),icon: Icons.chevron_right_sharp,onClick: (){
+                            if(_postNewGrievanceFormKey.currentState!.validate()){
+                              value.postGrievanceMessage(context: context,selectedGrievanceType: selectedGrievanceType,details: details.text.toString(),subject: subject.text.toString());
+                              emptyForm();
+                            }
+                          })
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -81,23 +89,6 @@ class PostNewGrievance with ChangeNotifier{
         ),
       ),
     );
-  }
-
-  void postGrievanceMessage(){
-    String id = DateTime.now().millisecondsSinceEpoch.toString();
-    postGrievance.doc(id).set({
-      "id":id,
-      "user_id":Session().userId.toString(),
-      "grievance_type":selectedGrievanceType,
-      "subject":subject.text.toString(),
-      "details":details.text.toString(),
-      "reply":"0",
-      "status":"0",
-      "date":DateTime.now().toString()
-    }).then((value){
-      subject.text = "";
-      details.text = "";
-    });
   }
   
   void fetchGrievanceType(){
@@ -108,7 +99,16 @@ class PostNewGrievance with ChangeNotifier{
           var data = snapshot.docs[i].data() as Map;
           grievanceType.add(data['grievance_type']);
         }
+        selectedGrievanceType = grievanceType[0];
+      }).then((value){
       });
     }
+  }
+
+  void emptyForm()async{
+    await Future.delayed(const Duration(seconds: 1),() {
+      subject.text = "";
+      details.text = "";
+    },);
   }
 }

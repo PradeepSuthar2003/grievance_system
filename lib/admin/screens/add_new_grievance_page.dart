@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/Utils/gender_group.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
+import 'package:lj_grievance/models/add_cell_member_model.dart';
 import 'package:lj_grievance/vaildation/validation.dart';
 import 'package:provider/provider.dart';
 
@@ -103,16 +103,24 @@ class AddGrievancePage with ChangeNotifier{
                 }),
                 const SizedBox(height: 15,),
                 const Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Add member"),
-                    RoundedButton().roundedButton(icon: Icons.add,onClick: (){
-                      if(_formKey.currentState!.validate()){
-                        createGrievanceCellMember();
-                      }
-                    }),
-                  ],
+                ChangeNotifierProvider<AddCellMemberModel>(
+                  create: (context) => AddCellMemberModel(),
+                  child: Consumer<AddCellMemberModel>(
+                    builder: (context, value, child) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Add member"),
+                          RoundedButton().roundedButton(haveTwoChild: value.isLoading,child: const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),icon: Icons.add,onClick: (){
+                            if(_formKey.currentState!.validate()){
+                              value.createGrievanceCellMember(context: thisPageContext, alertContext: context, email: email.text.toString(), password: password.text.toString(), gender: gender.toString().substring(7), contact: contact.text.toString(), designation: designation.text.toString(), name: name.text.toString());
+                              emptyForm();
+                            }
+                          }),
+                        ],
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20,),
               ],
@@ -123,32 +131,13 @@ class AddGrievancePage with ChangeNotifier{
     );
   }
 
-  void emptyForm(){
-    name.text = "";
-    email.text = "";
-    designation.text = "";
-    password.text = "";
-    contact.text = "";
-  }
-
-  void createGrievanceCellMember(){
-    auth.createUserWithEmailAndPassword(email: email.text.toString(), password: password.text.toString()).then((value){
-      addGrievanceUser.doc(auth.currentUser!.uid).set({
-        "approved_status":"2",
-        "contact":contact.text.toString(),
-        "designation":designation.text.toString(),
-        "email":email.text.toString(),
-        "password":password.text.toString(),
-        "gender":gender.toString().substring(7),
-        "name":name.text.toString(),
-        "id":auth.currentUser!.uid,
-        "role":"member"
-      }).then((value){
-        emptyForm();
-        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "New member added");
-      }).onError((error, stackTrace){
-        ErrorMessage().errorMessage(context: thisPageContext, errorMessage: "$error".substring(30),ifError: true);
-      });
+  void emptyForm() async{
+    await Future.delayed(Duration(seconds: 1),(){
+      name.text = "";
+      email.text = "";
+      designation.text = "";
+      password.text = "";
+      contact.text = "";
     });
   }
 }

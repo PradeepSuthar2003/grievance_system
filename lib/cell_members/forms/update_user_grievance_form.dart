@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
+import 'package:lj_grievance/models/update_grievance_model.dart';
 import 'package:provider/provider.dart';
 
 class UpdateUserGrievanceForm{
@@ -92,14 +93,20 @@ class UpdateUserGrievanceForm{
                             actions:[
                               TextButton(onPressed: () {
                                 Navigator.pop(context);
-                              },
-                                  child:const Text("Cancel")),
-                              reply.text == "0" ? TextButton(onPressed: () {
-                                if(_replyFormKey.currentState!.validate()){
-                                  giveReply(id);
-                                }
-                              },
-                            child:const Text("Reply")):Container(),
+                              }, child:const Text("Cancel")),
+                              reply.text == "0" ? ChangeNotifierProvider<UpdateGrievanceModel>(
+                                create:(context) => UpdateGrievanceModel(),
+                                child: Consumer<UpdateGrievanceModel>(
+                                  builder:(context, value, child) {
+                                    return value.isLoading?const CircularProgressIndicator():TextButton(onPressed: () {
+                                      if(_replyFormKey.currentState!.validate()){
+                                        value.giveReply(id,context,reply.text.toString());
+                                      }
+                                    },
+                                        child:const Text("Reply"));
+                                  },
+                                ),
+                              ):Container(),
                             ],
                           ),
                         );
@@ -143,14 +150,6 @@ class UpdateUserGrievanceForm{
       }
     }).then((value){
       navigateToPage.notifyListeners();
-    });
-  }
-
-  void giveReply(String id){
-    grievance.doc(id).update({
-      "reply":reply.text.toString(),
-      "status":"1",
-    }).then((value) {
     });
   }
 }
