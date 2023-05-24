@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/vaildation/validation.dart';
@@ -7,6 +8,8 @@ class PostGrievanceTypeForm{
   final _postGrievanceFormKey = GlobalKey<FormState>();
 
   TextEditingController grievanceType = TextEditingController();
+
+  final grievanceTypeCollection = FirebaseFirestore.instance.collection("grievance_type");
 
   Widget postGrievanceForm(){
     return Form(
@@ -28,23 +31,44 @@ class PostGrievanceTypeForm{
               }),
             const SizedBox(height: 10,),
             ElevatedButton(onPressed: (){
-              if(_postGrievanceFormKey.currentState!.validate()){}
+              if(_postGrievanceFormKey.currentState!.validate()){
+                postGrievanceType();
+              }
             },style: ButtonStyle(elevation: MaterialStateProperty.all(0.0)), child: const Text("Add")),
             const SizedBox(height: 10,),
             const Divider(),
             const Text("All grievance type"),
             const SizedBox(height: 10,),
-            Expanded(
-              child: ListView.builder(itemBuilder: (context, index) {
-                return const ListTile(
-                  title: Text("Grievance type"),
-                  trailing: Text("Added date"),
+            StreamBuilder(
+              stream: grievanceTypeCollection.snapshots(),
+              builder: (context, snapshot) {
+                if(snapshot.hasError){
+                  return const Center(child: Text("Something went wrong"));
+                }
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return const Center(child: CircularProgressIndicator(),);
+                }
+                return Expanded(
+                  child: ListView.builder(itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(snapshot.data!.docs[index]['grievance_type']),
+                      trailing: Text(snapshot.data!.docs[index]['date']),
+                    );
+                  },itemCount: snapshot.data!.docs.length,),
                 );
-              },itemCount: 5,),
-            )
+            },),
           ],
         ),
       ),
     );
+  }
+
+  void postGrievanceType(){
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+    grievanceTypeCollection.doc(id).set({
+      "id":id,
+      "grievance_type":grievanceType.text.toString(),
+      "date":DateTime.now().toString()
+    });
   }
 }

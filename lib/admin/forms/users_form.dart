@@ -153,10 +153,6 @@ class UserForm{
                     Navigator.pop(context);
                   });
                 }else{
-                  if(auth.currentUser != null){
-                    auth.signInWithEmailAndPassword(email: email.text.toString(), password: password.text.toString());
-                    auth.currentUser!.delete();
-                  }
                   updateUser(id:id);
                   Navigator.pop(context);
                 }

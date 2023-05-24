@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
+import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
 import 'package:provider/provider.dart';
@@ -9,13 +11,18 @@ class PostNewGrievance with ChangeNotifier{
 
   final _postNewGrievanceFormKey = GlobalKey<FormState>();
 
-  List<String> grievanceType = ['College issue','other'];
+  final postGrievance = FirebaseFirestore.instance.collection("grievances");
+
+  List<String> grievanceType = [];
   String? selectedGrievanceType;
 
   TextEditingController subject = TextEditingController();
   TextEditingController details = TextEditingController();
 
+  int runTime = 0;
+
   Widget postNewGrievance({BuildContext? context}){
+    fetchGrievanceType();
     selectedGrievanceType = grievanceType[0];
     return SingleChildScrollView(
       child: ChangeNotifierProvider<NavigateToPage>(
@@ -62,7 +69,9 @@ class PostNewGrievance with ChangeNotifier{
                   children: [
                     const Text("Submit"),
                     RoundedButton().roundedButton(icon: Icons.chevron_right_sharp,onClick: (){
-                      if(_postNewGrievanceFormKey.currentState!.validate()){}
+                      if(_postNewGrievanceFormKey.currentState!.validate()){
+                        postGrievanceMessage();
+                      }
                     })
                   ],
                 ),
@@ -72,5 +81,34 @@ class PostNewGrievance with ChangeNotifier{
         ),
       ),
     );
+  }
+
+  void postGrievanceMessage(){
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+    postGrievance.doc(id).set({
+      "id":id,
+      "user_id":Session().userId.toString(),
+      "grievance_type":selectedGrievanceType,
+      "subject":subject.text.toString(),
+      "details":details.text.toString(),
+      "reply":"0",
+      "status":"0",
+      "date":DateTime.now().toString()
+    }).then((value){
+      subject.text = "";
+      details.text = "";
+    });
+  }
+  
+  void fetchGrievanceType(){
+    if(runTime==0){
+      runTime++;
+      FirebaseFirestore.instance.collection("grievance_type").where("").get().then((QuerySnapshot snapshot){
+        for(int i=0;i<snapshot.size;i++){
+          var data = snapshot.docs[i].data() as Map;
+          grievanceType.add(data['grievance_type']);
+        }
+      });
+    }
   }
 }

@@ -11,6 +11,7 @@ class UpdateUserGrievancePage extends StatefulWidget{
 class _UpdateUserGrievancePage extends State<UpdateUserGrievancePage>{
   @override
   Widget build(BuildContext context) {
+    final id = ModalRoute.of(context)?.settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -27,7 +28,7 @@ class _UpdateUserGrievancePage extends State<UpdateUserGrievancePage>{
           )
         ],
       ),
-      body: UpdateUserGrievanceForm().updateUserGrievanceForm(context: context),
+      body: UpdateUserGrievanceForm().updateUserGrievanceForm(context: context,id: id),
     );
   }
 }
