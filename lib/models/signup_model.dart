@@ -42,7 +42,7 @@ class SignUpModel with ChangeNotifier {
     ).then((value){
       isLoading=false;
       notifyListeners();
-      ErrorMessage().errorMessage(context: context, errorMessage: "Signup successfully");
+      ErrorMessage().errorMessage(context: context, errorMessage: "your signup request submit successfully");
       Navigator.pushNamedAndRemoveUntil(context, 'signup_page', (route) => false);
     }).onError((error, stackTrace){
       isLoading=false;

@@ -7,7 +7,6 @@ import 'package:lj_grievance/custom_widgets/rounded_button.dart';
 import 'package:lj_grievance/models/add_cell_member_model.dart';
 import 'package:lj_grievance/vaildation/validation.dart';
 import 'package:provider/provider.dart';
-
 import '../../custom_widgets/custom_input_field.dart';
 
 class AddGrievancePage with ChangeNotifier{
@@ -132,7 +131,7 @@ class AddGrievancePage with ChangeNotifier{
   }
 
   void emptyForm() async{
-    await Future.delayed(Duration(seconds: 1),(){
+    await Future.delayed(const Duration(seconds: 1),(){
       name.text = "";
       email.text = "";
       designation.text = "";

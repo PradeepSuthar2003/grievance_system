@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/error_message.dart';
-import 'package:lj_grievance/authentication/screens/session.dart';
 
 class AddCellMemberModel with ChangeNotifier{
 
