@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
+import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:lj_grievance/user/screens/my_grievances.dart';
 import 'package:lj_grievance/user/screens/post_new_grievance.dart';
@@ -20,7 +21,7 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String profileName = "Unknown";
+  TextEditingController profileName = TextEditingController();
 
   @override
   void initState(){
@@ -49,11 +50,12 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
                   ),
                   const Divider(),
                   const SizedBox(height: 20,),
-                  CustomMenuItem().customMenuItem(icon: Icons.person_2_outlined,color:const Color(0xFFFFFFFF),text:profileName,onclick: (){
-                    Navigator.pushNamed(context, 'user_profile_page');
-                  }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: CustomInputField().customInputField(readOnly: true,icon: Icons.person, text: "", controller: profileName),
+                  ),
                   const SizedBox(height: 20,),
-                  const Divider(thickness: 2,),
+                  const Divider(),
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
@@ -126,7 +128,7 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
     FirebaseFirestore.instance.collection("users").doc(Session().userId).get().then((DocumentSnapshot snapshot){
       if(snapshot.exists){
         var data = snapshot.data() as Map;
-        profileName = data['name'];
+        profileName.text = data['name'];
       }
     });
   }

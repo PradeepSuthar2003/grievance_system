@@ -4,6 +4,7 @@ import 'package:lj_grievance/Utils/navigate_to_page.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/cell_members/screens/all_user_grievance.dart';
 import 'package:lj_grievance/cell_members/screens/post_grievance_type_page.dart';
+import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +21,12 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String profileName = "Unknown";
+  TextEditingController profileName = TextEditingController();
 
   @override
   void initState(){
     super.initState();
+    getUserInfo();
   }
 
   @override
@@ -48,11 +50,12 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
                   ),
                   const Divider(),
                   const SizedBox(height: 20,),
-                  CustomMenuItem().customMenuItem(icon: Icons.person_2_outlined,color:const Color(0xFFFFFFFF),text: profileName,onclick: (){
-                    Navigator.pushNamed(context, 'cell_member_profile_page');
-                  }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: CustomInputField().customInputField(readOnly: true,icon: Icons.person, text: "", controller: profileName),
+                  ),
                   const SizedBox(height: 20,),
-                  const Divider(thickness: 2,),
+                  const Divider(),
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
@@ -125,7 +128,7 @@ class _MemberHomePage extends State<MemberHomePage> with TickerProviderStateMixi
     FirebaseFirestore.instance.collection("users").doc(Session().userId).get().then((DocumentSnapshot snapshot){
       if(snapshot.exists){
         var data = snapshot.data() as Map;
-        profileName = data['name'];
+        profileName.text = data['name'];
       }
     });
   }
