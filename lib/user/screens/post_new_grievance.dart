@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
-import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
 import 'package:lj_grievance/models/post_new_grievance_model.dart';
@@ -22,6 +21,8 @@ class PostNewGrievance with ChangeNotifier{
 
   int runTime = 0;
 
+  NavigateToPage navigateToPage = NavigateToPage();
+
   Widget postNewGrievance({BuildContext? context}){
     fetchGrievanceType();
     return SingleChildScrollView(
@@ -41,6 +42,7 @@ class PostNewGrievance with ChangeNotifier{
                     const Text("Grievance type : \t\t"),
                     Expanded(
                       child: Consumer<NavigateToPage>(builder: (context, value, child) {
+                        navigateToPage = value;
                         return DropdownButton(items: grievanceType.map((String item){
                           return DropdownMenuItem(value: item,child: Text(item));
                         }).toList(), onChanged: (val){ selectedGrievanceType = val; value.notifyListeners(); },value: selectedGrievanceType,);
@@ -90,7 +92,7 @@ class PostNewGrievance with ChangeNotifier{
       ),
     );
   }
-  
+
   void fetchGrievanceType(){
     if(runTime==0){
       runTime++;
@@ -101,6 +103,7 @@ class PostNewGrievance with ChangeNotifier{
         }
         selectedGrievanceType = grievanceType[0];
       }).then((value){
+        navigateToPage.notifyListeners();
       });
     }
   }

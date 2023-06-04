@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lj_grievance/Utils/error_message.dart';
 import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 import 'package:lj_grievance/custom_widgets/custom_menu_item.dart';
@@ -17,7 +18,6 @@ class UserProfilePage extends StatelessWidget{
   final _changePasswordKey = GlobalKey<FormState>();
 
   TextEditingController name =  TextEditingController();
-  TextEditingController email = TextEditingController();
   TextEditingController newPassword = TextEditingController();
 
   @override
@@ -53,16 +53,16 @@ class UserProfilePage extends StatelessWidget{
                           return "Enter valid name";
                         }
                       }),
-                      const SizedBox(height: 20,),
-                      CustomInputField().customInputField(icon: Icons.email_outlined, text: "", controller: email,validate: (value){
-                        if(!value!.isValidEmail){
-                          return "Enter valid name";
-                        }
-                      }),
                       const SizedBox(height: 30,),
                       ElevatedButton(onPressed: (){
                         if(_formKey.currentState!.validate()){
-
+                          users.doc(Session().userId).update(
+                              {
+                                "name":name.text.toString(),
+                              }
+                          ).then((value){
+                            ErrorMessage().errorMessage(context: context, errorMessage: "Updated");
+                          });
                         }
                       },style: ButtonStyle(elevation: MaterialStateProperty.all(0)), child: const Text("Change Profile"),),
                       const SizedBox(height: 10,),
@@ -72,47 +72,15 @@ class UserProfilePage extends StatelessWidget{
                         auth.signOut();
                         Session().userId = "";
                         Session().role = "";
+                        Session().email = "";
                         Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
                       }, color: Colors.white),
                       const SizedBox(height: 10,),
                       CustomMenuItem().customMenuItem(icon:Icons.change_circle_outlined,text: "Change Password", onclick: (){
-                        showDialog(context: context, builder: (context){
-                          return AlertDialog(
-
-                            title: Form(
-                              key: _changePasswordKey,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 50,vertical: 20),
-                                child: Column(
-                                  children:[
-                                    const Text("Change Password"),
-                                    const SizedBox(height: 20,),
-                                    CustomInputField().customInputField(icon: Icons.change_circle_outlined, text: "New password", controller: newPassword,validate: (value){
-                                      if(!value!.isValidPassword){
-                                        return "Enter valid password";
-                                      }
-                                      return null;
-                                    }),
-                                    const SizedBox(height: 20,),
-                                    CustomInputField().customInputField(icon: Icons.change_circle_outlined, text: "Confirm new password", controller: newPassword,validate: (value){
-                                      if(!value!.isValidPassword){
-                                        return "Enter valid password";
-                                      }
-                                      return null;
-                                    }),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            actions: [
-                              TextButton(onPressed: (){
-                                Navigator.pop(context);
-                              }, child: const Text("Cancel")),
-                              TextButton(onPressed: (){
-                                if(_changePasswordKey.currentState!.validate()){}
-                              }, child: const Text("Update")),
-                            ],
-                          );
+                        auth.sendPasswordResetEmail(email: Session().email.toString()).then((value){
+                          ErrorMessage().errorMessage(context: context, errorMessage: "Password reset email was send on register email");
+                        }).onError((error, stackTrace){
+                          ErrorMessage().errorMessage(context: context, errorMessage: error.toString().substring(30),ifError: true);
                         });
                       }, color: const Color(0xFFFFFFFF)),
                       const SizedBox(height: 20,),
@@ -130,7 +98,6 @@ class UserProfilePage extends StatelessWidget{
       if(snapshot.exists){
         var data = snapshot.data() as Map;
         name.text = data['name'];
-        email.text = data['email'];
       }
     });
   }

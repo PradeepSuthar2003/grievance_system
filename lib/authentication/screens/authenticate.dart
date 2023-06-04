@@ -40,6 +40,7 @@ class Authenticate extends StatelessWidget{
       if(snapshot.exists){
         var data = snapshot.data() as Map;
         Session().role = data['role'];
+        Session().email = data['email'];
       }
     });
   }

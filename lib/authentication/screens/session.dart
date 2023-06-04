@@ -3,6 +3,7 @@ class Session{
 
   String? userId;
   String? role;
+  String? email;
 
   factory Session(){
     return _session;

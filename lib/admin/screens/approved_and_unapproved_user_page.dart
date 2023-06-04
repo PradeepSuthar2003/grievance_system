@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/admin/forms/users_form.dart';
+import 'package:lj_grievance/custom_widgets/rounded_button.dart';
+
+final users = FirebaseFirestore.instance.collection("users");
 
 class UsersPage{
   bool approvedSelected = false;
   bool unapprovedSelected = false;
-
-  final users = FirebaseFirestore.instance.collection("users").snapshots();
 
   late BuildContext thisPageContext;
 
@@ -20,7 +21,7 @@ class UsersPage{
           child: Text(approvedSelected == true ? "Approved users":"UnApproved users",style: const TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
         ),
         StreamBuilder<QuerySnapshot>(
-          stream: users,
+          stream: users.snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot>snapshot) {
 
           if(snapshot.connectionState == ConnectionState.waiting){
@@ -33,7 +34,7 @@ class UsersPage{
             return Expanded(
               child: ListView.builder(itemBuilder:(context, index) {
                 if(snapshot.data!.docs[index]['approved_status'] == "1"){
-                  return userListTile(context, snapshot, index);
+                  return userListTile(context, snapshot, index,approvedSelect);
                 }
                 return Container();
               },itemCount: snapshot.data!.docs.length,),
@@ -42,7 +43,7 @@ class UsersPage{
             return Expanded(
               child: ListView.builder(itemBuilder:(context, index) {
                 if(snapshot.data!.docs[index]['approved_status'] == "0"){
-                  return userListTile(context, snapshot, index);
+                  return userListTile(context, snapshot, index,approvedSelect);
                 }
                 return Container();
               },itemCount: snapshot.data!.docs.length,),
@@ -53,16 +54,27 @@ class UsersPage{
     );
   }
 
-  Widget userListTile(BuildContext context,AsyncSnapshot snapshot,int index){
+  Widget userListTile(BuildContext context,AsyncSnapshot snapshot,int index,bool approval){
     return ListTile(
       leading: const CircleAvatar(child: Icon(Icons.person_2_outlined),),
       title: Text(snapshot.data!.docs[index]['name']),
       subtitle: Text((snapshot.data!.docs[index]['approved_status']!="0")?"Approved":"Unapproved"),
-      trailing: context!=null?IconButton(onPressed: (){
-        showDialog(context: context, builder: (context){
-          return UserForm().userForm(context: thisPageContext,index:index,approved:approvedSelected);
-        });
-      }, icon: const CircleAvatar(child: Icon(Icons.edit))):const Text(""),
+      trailing: SizedBox(
+        width: 100,
+        child: Row(
+          children: [
+            context!=null?IconButton(onPressed: (){
+              showDialog(context: context, builder: (context){
+                return UserForm().userForm(context: thisPageContext,index:index,approved:approvedSelected);
+              });
+            }, icon: const CircleAvatar(child: Icon(Icons.edit))):const Text(""),
+            !approval?
+            RoundedButton().roundedButton(icon: Icons.delete_forever_outlined,color: Colors.red,radius: 20,onClick: (){
+              users.doc(snapshot.data!.docs[index]['id']).delete();
+            }):Container(),
+          ],
+        ),
+      ),
     );
   }
 }

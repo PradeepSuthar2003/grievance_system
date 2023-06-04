@@ -42,8 +42,8 @@ class AllCoursePage{
                 return ListTile(
                   leading: CircleAvatar(child: Text((index+1).toString()),),
                   title: Text(snapshot.data!.docs[index]['course_name']),
-                  subtitle: Text(snapshot.data!.docs[index]['datetime']),
-                  trailing: Container(
+                  subtitle: Text(snapshot.data!.docs[index]['datetime'].toString().substring(0,16)),
+                  trailing: SizedBox(
                     width: 100,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,

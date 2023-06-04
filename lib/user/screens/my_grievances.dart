@@ -5,7 +5,7 @@ import 'package:lj_grievance/authentication/screens/session.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
 
 class MyGrievance{
-  bool isSelected = false;
+  bool isSelected = true;
 
   final postGrievance = FirebaseFirestore.instance.collection("grievances");
   final auth = FirebaseAuth.instance;
@@ -33,10 +33,12 @@ class MyGrievance{
                 title: Text(snapshot.data!.docs[index]['subject']),
                 subtitle: Text(snapshot.data!.docs[index]['details']),
                 trailing: snapshot.data!.docs[index]['reply'] == "0"?const Text("Open"):TextButton(child: const Text("View"),onPressed: (){
+                  subject.text = snapshot.data!.docs[index]['subject'];
+                  details.text = snapshot.data!.docs[index]['details'];
                   showDialog(context: context, builder: (context) {
                     return SingleChildScrollView(
                       child: AlertDialog(
-                        title: Container(
+                        title: SizedBox(
                           width: 500,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

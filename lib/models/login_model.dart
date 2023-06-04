@@ -17,6 +17,7 @@ class LoginModel with ChangeNotifier{
     notifyListeners();
     await auth.signInWithEmailAndPassword(email: email, password: password).then((value){
       Session().userId = auth.currentUser!.uid;
+      Session().email = email;
       FirebaseFirestore.instance
           .collection("users")
           .doc(auth.currentUser!.uid)

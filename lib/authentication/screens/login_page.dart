@@ -16,16 +16,12 @@ class _LoginPage extends State<LoginPage>{
 
   final _loginForm = GlobalKey<FormState>();
 
-  List<String> usersType = ['Admin','Cell member','Student'];
-  String? selectedUserType;
-
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
 
   @override
   Widget build(BuildContext context) {
-    selectedUserType = usersType[0];
     return ChangeNotifierProvider<LoginModel>(
       create: (context) => LoginModel(),
       child: Scaffold(

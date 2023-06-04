@@ -45,7 +45,7 @@ class AllBatchPage{
               return ListTile(
                 leading: CircleAvatar(child: Text((index+1).toString()),),
                 title: Text(snapshot.data!.docs[index]['batch_year']),
-                subtitle: Text(snapshot.data!.docs[index]['datetime']),
+                subtitle: Text(snapshot.data!.docs[index]['datetime'].toString().substring(0,16)),
                 trailing: Container(
                   width: 100,
                   child: Row(
