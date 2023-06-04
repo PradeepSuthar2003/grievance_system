@@ -11,7 +11,7 @@ class Authenticate extends StatelessWidget{
   Widget build(BuildContext context) {
     checkLogin(context: context);
     return const Scaffold(
-      body: Center(child: Text("Splash")),
+      body: Center(child: CircleAvatar(backgroundImage: AssetImage("assets/images/splash_logo.jpg"),radius: 100,)),
     );
   }
 
