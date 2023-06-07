@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/Utils/navigate_to_page.dart';
+import 'package:lj_grievance/admin/forms/dashboard.dart';
 import 'package:lj_grievance/admin/screens/add_new_grievance_page.dart';
 import 'package:lj_grievance/admin/screens/all_grievance_page.dart';
 import 'package:lj_grievance/admin/screens/approved_and_unapproved_user_page.dart';
@@ -26,6 +27,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
   AllCoursePage allCoursePage = AllCoursePage();
   AllBatchPage allBatchPage = AllBatchPage();
   UsersPage usersPage = UsersPage();
+  Dashboard dashboard = Dashboard();
 
   TextEditingController profileName = TextEditingController();
 
@@ -63,6 +65,20 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                     child: CustomInputField().customInputField(themeColor: Color(0xFF033500),readOnly: true,icon: Icons.person, text: "", controller: profileName),
                   ),
                   const SizedBox(height: 20,),
+                  const Divider(),
+                  const SizedBox(height: 10,),
+                  Consumer<NavigateToPage>(
+                    builder: (context, value, child) {
+                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "Dashboard",color: dashboard.isSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: dashboard.isSelected?Colors.white:Colors.black,onclick: (){
+                        falseAllMenuActive();
+                        dashboard.isSelected = true;
+                        value.context = context;
+                        value.navigateTo(context: context,currWidget: dashboard.showDashboard(context: value.context));
+                        closeDrawer();
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10,),
                   const Divider(),
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
@@ -177,6 +193,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
     usersPage.approvedSelected = false;
     usersPage.unapprovedSelected = false;
     addGrievancePage.isSelected = false;
+    dashboard.isSelected = false;
   }
 
   void closeDrawer() async{

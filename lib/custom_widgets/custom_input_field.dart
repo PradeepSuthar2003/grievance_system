@@ -14,6 +14,8 @@ class CustomInputField{
     Color themeColor = Colors.black,
     IconData? postIcon,
     IconData? passwordShowIcon,
+    String labelText = "",
+    bool haveLabel = false,
     required TextEditingController controller
   })
   {
@@ -27,6 +29,7 @@ class CustomInputField{
       maxLines: maxLines,
       keyboardType:inputType,
       decoration: InputDecoration(
+        label:haveLabel?Text(labelText):null,
         prefixIcon: Icon(icon,color: themeColor,),
         suffixIcon: IconButton(icon:Icon(this.obscureText?passwordShowIcon:postIcon,color:themeColor),color:themeColor,onPressed:postIconClicked,),
         hintText: text,
