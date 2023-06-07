@@ -27,7 +27,7 @@ class AdUpGrievanceForm{
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
       child: SingleChildScrollView(
-        child: AlertDialog(title: Container(
+        child: AlertDialog(title: SizedBox(
           width: 450,
           child: Form(
             key: _formKey,
@@ -51,7 +51,7 @@ class AdUpGrievanceForm{
                   return null;
                 }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: email,icon: Icons.email_outlined,text: "Email",inputType: TextInputType.emailAddress,validate: (value){
+                CustomInputField().customInputField(readOnly: true,controller: email,icon: Icons.email_outlined,text: "Email",inputType: TextInputType.emailAddress,validate: (value){
                   if(!value!.isValidEmail){
                     return "Enter valid email";
                   }
@@ -65,7 +65,7 @@ class AdUpGrievanceForm{
                   return null;
                 }),
                 const SizedBox(height: 15,),
-                CustomInputField().customInputField(controller: password,icon: Icons.lock_outline,text: "Password",obscureText: true,validate: (value){
+                CustomInputField().customInputField(readOnly: true,controller: password,icon: Icons.lock_outline,text: "Password",obscureText: true,validate: (value){
                   if(!value!.isValidPassword){
                     return "Enter valid password";
                   }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/custom_widgets/custom_input_field.dart';
+import 'package:lj_grievance/custom_widgets/rounded_button.dart';
 import 'package:lj_grievance/vaildation/validation.dart';
 
 class PostGrievanceTypeForm{
@@ -20,8 +21,8 @@ class PostGrievanceTypeForm{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Text("Add grievance type",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+              child: Text("Add grievance type",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Color(0xFF033500)),),
             ),
             CustomInputField().customInputField(icon: Icons.select_all_outlined, text: "Enter grievance type", controller: grievanceType,validate: (value){
               if((value!.trim()).isEmpty){
@@ -52,7 +53,23 @@ class PostGrievanceTypeForm{
                   child: ListView.builder(itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(snapshot.data!.docs[index]['grievance_type']),
-                      trailing: Text(snapshot.data!.docs[index]['date']),
+                      subtitle: Text(snapshot.data!.docs[index]['date'].toString().substring(0,16)),
+                      trailing: RoundedButton().roundedButton(icon: Icons.delete_forever_outlined,radius: 20,color: Colors.red,onClick: (){
+                        showDialog(context: context, builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Do you want to delete ?"),
+                            actions: [
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                              }, child: const Text("Cancel")),
+                              TextButton(onPressed: (){
+                                grievanceTypeCollection.doc(snapshot.data!.docs[index]['id']).delete();
+                                Navigator.pop(context);
+                              }, child: const Text("Delete")),
+                            ],
+                          );
+                        },);
+                      }),
                     );
                   },itemCount: snapshot.data!.docs.length,),
                 );
@@ -69,6 +86,8 @@ class PostGrievanceTypeForm{
       "id":id,
       "grievance_type":grievanceType.text.toString(),
       "date":DateTime.now().toString()
+    }).then((value){
+      grievanceType.text = "";
     });
   }
 }

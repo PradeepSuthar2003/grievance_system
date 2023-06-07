@@ -44,7 +44,7 @@ class UserProfilePage extends StatelessWidget{
                       ),
                       const Divider(),
                       const SizedBox(height: 50,),
-                      RichText(text: const TextSpan(text: "Your",style: TextStyle(color: Colors.blueAccent,fontSize: 20),children: [
+                      RichText(text: const TextSpan(text: "Your",style: TextStyle(color: Colors.teal,fontSize: 20),children: [
                         TextSpan(text: "\tProfile",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10))
                       ])),
                       const SizedBox(height: 40,),

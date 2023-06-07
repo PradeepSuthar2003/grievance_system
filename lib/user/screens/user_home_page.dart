@@ -44,22 +44,22 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: RichText(text: const TextSpan(text: "Welcome to",style: TextStyle(color: Colors.blueAccent,fontSize: 25),children: [
-                      TextSpan(text: "\tGrievance System",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10))
+                    child: RichText(text: const TextSpan(text: "Welcome to",style: TextStyle(color: Color(0xFF033500),fontSize: 17),children: [
+                      TextSpan(text: "\tGrievance System",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 8))
                     ])),
                   ),
                   const Divider(),
                   const SizedBox(height: 20,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: CustomInputField().customInputField(readOnly: true,icon: Icons.person, text: "", controller: profileName),
+                    child: CustomInputField().customInputField(themeColor: const Color(0xFF033500),readOnly: true,icon: Icons.person, text: "", controller: profileName),
                   ),
                   const SizedBox(height: 20,),
                   const Divider(),
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "My grievance report",color: myGrievance.isSelected?const Color(0xFF000044):const Color(0xFFEBF2F9),onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "My grievance report",color: myGrievance.isSelected?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: myGrievance.isSelected?Colors.white:Colors.black,onclick: (){
                         falseAllMenuActive();
                         myGrievance.isSelected = true;
                         value.navigateTo(currWidget: myGrievance.myGrievance(context: value.context), context: context);
@@ -70,7 +70,7 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "Post new grievance",color: postNewGrievance.isSelected?const Color(0xFF000044):const Color(0xFFEBF2F9),onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.plus_one,text: "Post new grievance",color: postNewGrievance.isSelected?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: postNewGrievance.isSelected?Colors.white:Colors.black,onclick: (){
                         falseAllMenuActive();
                         postNewGrievance.isSelected = true;
                         value.navigateTo(currWidget: postNewGrievance.postNewGrievance(context: value.context), context: context);
@@ -80,7 +80,7 @@ class _UserPage extends State<UserHomePage> with TickerProviderStateMixin{
                   ),
                   const SizedBox(height: 10,),
                   const Divider(),
-                  const Text("\t\tpogpks.pvt.ltd",style: TextStyle(fontSize: 10)),
+                  const Text("\t\tpogpks.pvt.ltd",style: TextStyle(fontSize: 10,color: Color(0xFF033500))),
                   const SizedBox(height:10),
                 ],
               ),

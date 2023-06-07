@@ -35,7 +35,7 @@ class PostNewGrievance with ChangeNotifier{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Post new grievance",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
+                const Text("Post new grievance",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Color(0xFF033500)),),
                 const SizedBox(height: 20,),
                 Row(
                   children: [

@@ -50,16 +50,16 @@ class _SignUpPage extends State<SignUpPage> {
           title: RichText(
               text: const TextSpan(
                   text: "Welcome to ",
-                  style: TextStyle(color: Colors.white70, fontSize: 20),
+                  style: TextStyle(color: Colors.white70, fontSize: 17),
                   children: [
                 TextSpan(
                     text: "\tGrievance System",
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 10))
+                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 8))
               ])),
           elevation: 0,
-          backgroundColor: const Color(0xFF1C2E4A),
+          backgroundColor: const Color(0xFF013220),
         ),
-        backgroundColor: const Color(0xFF1C2E4A),
+        backgroundColor: const Color(0xFF013220),
         body: SingleChildScrollView(
           child: Form(
             key: _signupForm,
@@ -68,9 +68,9 @@ class _SignUpPage extends State<SignUpPage> {
               child: Container(
                 width: double.infinity,
                 height: 900,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF152238),
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white38,width: 5),
+                  borderRadius: const BorderRadius.all(Radius.circular(15.0)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
@@ -79,14 +79,14 @@ class _SignUpPage extends State<SignUpPage> {
                     children: [
                       const Text(
                         "Signup",
-                        style: TextStyle(fontSize: 40, color: Colors.white),
+                        style: TextStyle(fontSize: 30, color: Colors.white60),
                       ),
                       const SizedBox(
                         height: 50,
                       ),
                       CustomInputField().customInputField(
                           inputType: TextInputType.name,
-                          themeColor: Colors.white,
+                          themeColor: Colors.white60,
                           icon: Icons.person_2_outlined,
                           text: "Enter name",
                           controller: name,
@@ -108,7 +108,7 @@ class _SignUpPage extends State<SignUpPage> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 15,
-                                    color: Colors.white),
+                                    color: Colors.white60),
                               ),
                               RadioMenuButton(
                                   value: Gender.Male,
@@ -120,7 +120,7 @@ class _SignUpPage extends State<SignUpPage> {
                                   child: const Text(
                                     "Male",
                                     style: TextStyle(
-                                        fontSize: 10, color: Colors.white),
+                                        fontSize: 10, color: Colors.white60),
                                   )),
                               RadioMenuButton(
                                   value: Gender.Female,
@@ -132,7 +132,7 @@ class _SignUpPage extends State<SignUpPage> {
                                   child: const Text(
                                     "Female",
                                     style: TextStyle(
-                                        fontSize: 10, color: Colors.white),
+                                        fontSize: 10, color: Colors.white60),
                                   )),
                               RadioMenuButton(
                                   value: Gender.Other,
@@ -144,7 +144,7 @@ class _SignUpPage extends State<SignUpPage> {
                                   child: const Text(
                                     "Other",
                                     style: TextStyle(
-                                        fontSize: 10, color: Colors.white),
+                                        fontSize: 10, color: Colors.white60),
                                   )),
                             ],
                           );
@@ -160,7 +160,7 @@ class _SignUpPage extends State<SignUpPage> {
                             children: [
                               const Text(
                                 "Course\t\t\t\t",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white60),
                               ),
                               Expanded(
                                 child: DropdownButton(
@@ -171,7 +171,7 @@ class _SignUpPage extends State<SignUpPage> {
                                         child: Text(
                                           item,
                                           style: const TextStyle(
-                                              color: Colors.white70),
+                                              color: Colors.white60),
                                         ));
                                   }).toList(),
                                   onChanged: (val) {
@@ -194,7 +194,7 @@ class _SignUpPage extends State<SignUpPage> {
                             children: [
                               const Text(
                                 "Batch\t\t\t\t",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white60),
                               ),
                               Expanded(
                                 child: DropdownButton(
@@ -205,7 +205,7 @@ class _SignUpPage extends State<SignUpPage> {
                                         child: Text(
                                           item,
                                           style: const TextStyle(
-                                              color: Colors.white70),
+                                              color: Colors.white60),
                                         ));
                                   }).toList(),
                                   onChanged: (val) {
@@ -224,12 +224,12 @@ class _SignUpPage extends State<SignUpPage> {
                       ),
                       CustomInputField().customInputField(
                           inputType: TextInputType.number,
-                          themeColor: Colors.white,
+                          themeColor: Colors.white60,
                           icon: Icons.join_inner_outlined,
                           text: "Enrollment",
                           controller: enrollmentNo,
                           validate: (value) {
-                            if (!value!.isNotNull) {
+                            if (value.toString().trim() == "") {
                               return "Enter enrollment";
                             }
                             return null;
@@ -239,7 +239,7 @@ class _SignUpPage extends State<SignUpPage> {
                       ),
                       CustomInputField().customInputField(
                           inputType: TextInputType.emailAddress,
-                          themeColor: Colors.white,
+                          themeColor: Colors.white60,
                           icon: Icons.email_outlined,
                           text: "Enter email",
                           controller: email,
@@ -254,12 +254,12 @@ class _SignUpPage extends State<SignUpPage> {
                       ),
                       CustomInputField().customInputField(
                           inputType: TextInputType.number,
-                          themeColor: Colors.white,
+                          themeColor: Colors.white60,
                           icon: Icons.contact_page_outlined,
                           text: "Enter contact",
                           controller: contact,
                           validate: (value) {
-                            if (!value!.isNotNull) {
+                            if (value.toString().trim() == "") {
                               return "Enter contact";
                             }
                             return null;
@@ -270,10 +270,10 @@ class _SignUpPage extends State<SignUpPage> {
                       Consumer<SignUpModel>(
                         builder: (context, value, child) {
                           return CustomInputField().customInputField(
-                              themeColor: Colors.white,
+                              themeColor: Colors.white60,
                               icon: Icons.lock_outline,
                               passwordShowIcon: Icons.remove_red_eye_outlined,
-                              postIcon: Icons.remove_red_eye,
+                              postIcon: Icons.visibility_off_outlined,
                               text: "Enter password",
                               obscureText: value.isPasswordNotVisible,
                               controller: password,
@@ -311,7 +311,7 @@ class _SignUpPage extends State<SignUpPage> {
                                   },
                                   child: const Text(
                                     "Login",
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.white60),
                                   )),
                               RoundedButton().roundedButton(
                                   haveTwoChild: value.isLoading,
@@ -333,7 +333,7 @@ class _SignUpPage extends State<SignUpPage> {
                                           password: password.text.toString());
                                     }
                                   },
-                                  color: Colors.indigo),
+                                  color: Colors.teal),
                             ],
                           );
                         },

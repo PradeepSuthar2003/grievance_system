@@ -22,7 +22,7 @@ class AllBatchPage{
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("All batch",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
+              const Text("All batch",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Color(0xFF033500)),),
               RoundedButton().roundedButton(icon: Icons.add,radius: 20.0,onClick: (){
                 context!=null?showDialog(context: context, builder: (context){
                     return BatchForm().batchForm(context: thisPageContext,isAddBatch: true);

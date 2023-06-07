@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lj_grievance/admin/forms/add_or_update_grievance_form.dart';
 import 'package:lj_grievance/custom_widgets/rounded_button.dart';
@@ -14,7 +13,7 @@ class AllGrievance{
       children: [
         const Padding(
           padding: EdgeInsets.all(20.0),
-          child: Text("All grievance cell members",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
+          child: Text("All grievance cell members",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Color(0xFF033500)),),
         ),
         StreamBuilder(
           stream: memberUser.snapshots(),
@@ -38,11 +37,11 @@ class AllGrievance{
                     width:100,
                     child: Row(
                       children: [
-                        context!=null?IconButton(onPressed: (){
+                        context!=null?RoundedButton().roundedButton(radius: 20,icon: Icons.edit,onClick: (){
                           showDialog(context: context, builder: (context){
                             return AdUpGrievanceForm().adUpGrievanceForm(context: context,index: index);
                           });
-                        }, icon: const CircleAvatar(child: Icon(Icons.edit))):const Text(""),
+                        }):const Text(""),
                         // RoundedButton().roundedButton(icon: Icons.delete_forever_outlined,color: Colors.red,radius: 20,onClick: (){
                         // }),
                       ],

@@ -40,7 +40,7 @@ class AddGrievancePage with ChangeNotifier{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 30,),
-                const Text("Add new grievance cell member",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
+                const Text("Add new grievance cell member",style: TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Color(0xFF033500)),),
                 const SizedBox(height: 30,),
                 CustomInputField().customInputField(controller: name,icon: Icons.abc_outlined,text: "Enter name",validate: (value){
                   if(!value!.isValidName){

@@ -26,7 +26,10 @@ class UpdateUserGrievanceForm{
 
   NavigateToPage navigateToPage = NavigateToPage();
 
+  late BuildContext thisPageContext;
+
   Widget updateUserGrievanceForm({BuildContext? context,String? id}){
+    thisPageContext = context!;
     fetchGrievanceInfo(id!);
     return ChangeNotifierProvider<NavigateToPage>(
       create: (context) => NavigateToPage(),
@@ -100,7 +103,7 @@ class UpdateUserGrievanceForm{
                                   builder:(context, value, child) {
                                     return value.isLoading?const CircularProgressIndicator():TextButton(onPressed: () {
                                       if(_replyFormKey.currentState!.validate()){
-                                        value.giveReply(id,context,reply.text.toString());
+                                        value.giveReply(id,context,reply.text.toString(),thisPageContext);
                                       }
                                     },
                                         child:const Text("Reply"));
@@ -119,7 +122,7 @@ class UpdateUserGrievanceForm{
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(onPressed: (){
-                      Navigator.pop(context!);
+                      Navigator.pop(context);
                     }, child: const Text("Cancel")),
                   ],
                 ),

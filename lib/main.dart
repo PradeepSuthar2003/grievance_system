@@ -25,7 +25,7 @@ class GrievanceApp extends StatelessWidget{
       debugShowCheckedModeBanner: false,
       initialRoute: 'authenticate',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
       routes: {
         'admin_home_page':(context) => const AdminHomePage(),

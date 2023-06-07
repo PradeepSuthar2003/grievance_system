@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomMenuItem {
-  Widget customMenuItem({IconData? icon,required String text,required VoidCallback onclick,required Color color}) {
+  Widget customMenuItem({IconData? icon,required String text,required VoidCallback onclick,required Color color,Color textColor = Colors.black54}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -20,7 +20,7 @@ class CustomMenuItem {
                 children: [
                   CircleAvatar(child: Icon(icon),),
                   const SizedBox(width: 20,),
-                  SizedBox(width: 150,child: Text(text,style: const TextStyle(color: Colors.blue),)),
+                  SizedBox(width: 150,child: Text(text,style: TextStyle(color: textColor),)),
                 ],
               ),
             ),

@@ -12,7 +12,6 @@ class CellMemberProfilePage extends StatelessWidget{
   CellMemberProfilePage({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final _changePasswordKey = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
 
   final users = FirebaseFirestore.instance.collection("users");
@@ -44,7 +43,7 @@ class CellMemberProfilePage extends StatelessWidget{
                       ),
                       const Divider(),
                       const SizedBox(height: 50,),
-                      RichText(text: const TextSpan(text: "Cell Member",style: TextStyle(color: Colors.blueAccent,fontSize: 20),children: [
+                      RichText(text: const TextSpan(text: "Cell Member",style: TextStyle(color: Colors.teal,fontSize: 20),children: [
                         TextSpan(text: "\tProfile",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10))
                       ])),
                       const SizedBox(height: 40,),
@@ -67,6 +66,8 @@ class CellMemberProfilePage extends StatelessWidget{
                         }
                       },style: ButtonStyle(elevation: MaterialStateProperty.all(0)),child: const Text("Change Profile"),),
                       const SizedBox(height: 10,),
+                      const Divider(),
+                      const SizedBox(height: 10,),
                       CustomMenuItem().customMenuItem(icon:Icons.exit_to_app,text: "SignOut", onclick: () {
                         auth.signOut();
                         Session().userId = "";
@@ -75,8 +76,6 @@ class CellMemberProfilePage extends StatelessWidget{
                         Navigator.pushNamedAndRemoveUntil(context, 'login_page', (route) => false);
                       }, color: Colors.white),
                       const SizedBox(height: 10,),
-                      const Divider(),
-                      const SizedBox(height: 20,),
                       CustomMenuItem().customMenuItem(icon:Icons.change_circle_outlined,text: "Change Password", onclick: (){
                         auth.sendPasswordResetEmail(email: Session().email.toString()).then((value){
                           ErrorMessage().errorMessage(context: context, errorMessage: "Password reset email was send on register email");

@@ -8,7 +8,7 @@ class UpdateGrievanceModel with ChangeNotifier{
 
   final grievance = FirebaseFirestore.instance.collection("grievances");
 
-  void giveReply(String id,BuildContext context,String reply){
+  void giveReply(String id,BuildContext context,String reply,BuildContext updatePageContext){
     isLoading = true;
     notifyListeners();
     grievance.doc(id).update({
@@ -19,6 +19,7 @@ class UpdateGrievanceModel with ChangeNotifier{
       notifyListeners();
       ErrorMessage().errorMessage(context: context, errorMessage: "Reply successfully");
       Navigator.pop(context);
+      Navigator.pop(updatePageContext);
     }).onError((error, stackTrace){
       isLoading = true;
       notifyListeners();

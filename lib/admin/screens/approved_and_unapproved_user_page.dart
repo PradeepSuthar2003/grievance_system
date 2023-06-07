@@ -18,7 +18,7 @@ class UsersPage{
       children: [
         Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Text(approvedSelected == true ? "Approved users":"UnApproved users",style: const TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Colors.blueAccent),),
+          child: Text(approvedSelected == true ? "Approved users":"UnApproved users",style: const TextStyle(fontSize: 18,decoration: TextDecoration.underline,color: Color(0xFF033500)),),
         ),
         StreamBuilder<QuerySnapshot>(
           stream: users.snapshots(),
@@ -63,14 +63,27 @@ class UsersPage{
         width: 100,
         child: Row(
           children: [
-            context!=null?IconButton(onPressed: (){
+            context!=null?RoundedButton().roundedButton(radius: 20,icon: Icons.edit,onClick: (){
               showDialog(context: context, builder: (context){
                 return UserForm().userForm(context: thisPageContext,index:index,approved:approvedSelected);
               });
-            }, icon: const CircleAvatar(child: Icon(Icons.edit))):const Text(""),
+            }):const Text(""),
             !approval?
             RoundedButton().roundedButton(icon: Icons.delete_forever_outlined,color: Colors.red,radius: 20,onClick: (){
-              users.doc(snapshot.data!.docs[index]['id']).delete();
+              showDialog(context: context, builder: (context){
+                return AlertDialog(
+                  title:const Text("Do you want to delete"),
+                  actions: [
+                    TextButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: const Text("Cancel")),
+                    TextButton(onPressed: (){
+                      users.doc(snapshot.data!.docs[index]['id']).delete();
+                      Navigator.pop(context);
+                    }, child: const Text("Delete")),
+                  ],
+                );
+              });
             }):Container(),
           ],
         ),

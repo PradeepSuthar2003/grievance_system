@@ -52,22 +52,22 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: RichText(text: const TextSpan(text: "Admin",style: TextStyle(color: Colors.blueAccent,fontSize: 25),children: [
-                      TextSpan(text: "\tGrievance System",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 10))
+                    child: RichText(text: const TextSpan(text: "Admin",style: TextStyle(color: Color(0xFF033500),fontSize: 17),children: [
+                      TextSpan(text: "\tGrievance System",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 8))
                     ])),
                   ),
                   const Divider(),
                   const SizedBox(height: 20,),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: CustomInputField().customInputField(readOnly: true,icon: Icons.person, text: "", controller: profileName),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: CustomInputField().customInputField(themeColor: Color(0xFF033500),readOnly: true,icon: Icons.person, text: "", controller: profileName),
                   ),
                   const SizedBox(height: 20,),
                   const Divider(),
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "All grievance",color: allGrievance.isSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.mark_email_unread_outlined,text: "All grievance",color: allGrievance.isSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: allGrievance.isSelected?Colors.white:Colors.black,onclick: (){
                         falseAllMenuActive();
                         allGrievance.isSelected = true;
                         value.context = context;
@@ -79,7 +79,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.plus_one,color: addGrievancePage.isSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Add new grievance type",onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.plus_one,color: addGrievancePage.isSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: addGrievancePage.isSelected?Colors.white:Colors.black,text: "Add new grievance type",onclick: (){
                         falseAllMenuActive();
                         addGrievancePage.isSelected = true;
                         value.navigateTo(context: context,currWidget: addGrievancePage.addGrievancePage(context: value.context));
@@ -92,7 +92,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.published_with_changes,color: usersPage.approvedSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Approved users",onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.published_with_changes,color: usersPage.approvedSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: usersPage.approvedSelected?Colors.white:Colors.black,text: "Approved users",onclick: (){
                         falseAllMenuActive();
                         usersPage.approvedSelected = true;
                         value.navigateTo(context: context,currWidget: usersPage.usersPage(approvedSelect: true,context: value.context));
@@ -103,7 +103,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.unpublished_outlined,color: usersPage.unapprovedSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Unapproved users",onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.unpublished_outlined,color: usersPage.unapprovedSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: usersPage.unapprovedSelected?Colors.white:Colors.black,text: "Unapproved users",onclick: (){
                         falseAllMenuActive();
                         usersPage.unapprovedSelected = true;
                         value.navigateTo(context: context,currWidget: usersPage.usersPage(context: value.context));
@@ -116,7 +116,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.library_books_outlined,color: allCoursePage.isSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Courses",onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.library_books_outlined,color: allCoursePage.isSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: allCoursePage.isSelected?Colors.white:Colors.black,text: "Courses",onclick: (){
                         falseAllMenuActive();
                         allCoursePage.isSelected = true;
                         value.navigateTo(context: context,currWidget: allCoursePage.allCoursePage(context: value.context));
@@ -127,7 +127,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   const SizedBox(height: 10,),
                   Consumer<NavigateToPage>(
                     builder: (context, value, child) {
-                      return CustomMenuItem().customMenuItem(icon: Icons.batch_prediction_outlined,color: allBatchPage.isSelected==true?const Color(0xFF000044):const Color(0xFFEBF2F9),text: "Batch",onclick: (){
+                      return CustomMenuItem().customMenuItem(icon: Icons.batch_prediction_outlined,color: allBatchPage.isSelected==true?const Color(0xFF033500):const Color(0xFFE0F2F1),textColor: allBatchPage.isSelected?Colors.white:Colors.black,text: "Batch",onclick: (){
                         falseAllMenuActive();
                         allBatchPage.isSelected = true;
                         value.navigateTo(context: context,currWidget: allBatchPage.allBatchPage(context: value.context));
@@ -137,7 +137,7 @@ class _AdminPage extends State<AdminHomePage> with TickerProviderStateMixin{
                   ),
                   const SizedBox(height: 10,),
                   const Divider(),
-                  const Text("\t\tpogpks.pvt.ltd",style: TextStyle(fontSize: 10)),
+                  const Text("\t\tpogpks.pvt.ltd",style: TextStyle(fontSize: 10,color: Color(0xFF033500))),
                   const SizedBox(height:10),
                 ],
               ),
